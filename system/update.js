@@ -2,14 +2,13 @@ moduleLoader.imports("update", ["ec"], function (ec) {
 
 	var returnObject = {},
 			gameObjects = ec.list, 
-      totalGameObjects = gameObjects.length,
       updates = 0;
     
   var update = function () {
 
     var i = 0, j = 0;
 
-  	for (i; i < totalGameObjects; i += 1) {
+  	for (i; i < gameObjects.length; i += 1) {
       
       if (gameObjects[i]["update"].length) {
             

@@ -55,17 +55,40 @@ moduleLoader.imports("canvas", [], function () {
 	
 	};
 
-	var getCurrentPointerPosition = function (e) {
+	var getCurrentPointerPosition = function () {
+	
+			return {
+				'x' : this.currentPointerPosition.x,
+				'y' : this.currentPointerPosition.y
+			}
+
+	};
+
+	var setCurrentPointerPosition = function (coordinate) {
+
+		this.currentPointerPosition.x = coordinate.x;
+		this.currentPointerPosition.y = coordinate.y;
+
+		return this;
+
+	};
+
+	var translateEventToPointerPosition = function (e) {
+
 		return {
 			'x' : Math.floor(e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - getElement(e.target.id).offsetLeft),
 			'y' : Math.floor(e.clientY + document.body.scrollTop + document.documentElement.scrollTop - getElement(e.target.id).offsetTop)
 		};
+
 	};
 
 	var setLastPointerPosition = function (coordinate) {
+		
 		this.lastPointerPosition.x = coordinate.x;
 		this.lastPointerPosition.y = coordinate.y;
+		
 		return this;
+	
 	};
 
 	var getLastPointerPosition = function () {
@@ -81,17 +104,20 @@ moduleLoader.imports("canvas", [], function () {
 		return this;
 
 	};
-
-	returnObject.prototype.getContext 	             = function (id) { return getContext.call(this, id) };
-	returnObject.prototype.getElement                = function (id) { return getElement.call(this, id) };
-	returnObject.prototype.getCanvas                 = function (id) { return getCanvas.call(this, id) };
-	returnObject.prototype.createCanvas              = function (id, parent) { return createCanvas.call(this, id, parent) }; 
-	returnObject.prototype.setStyle                  = function (config) { return setStyle.call(this, config) };
-	returnObject.prototype.getCurrentPointerPosition = function (e) { return getCurrentPointerPosition.call(this, e) };
-	returnObject.prototype.lastPointerPosition       = {'x':undefined,'y':undefined};
-	returnObject.prototype.setLastPointerPosition    = function (x, y) { return setLastPointerPosition.call(this, x, y) };
-	returnObject.prototype.getLastPointerPosition    = function () { return getLastPointerPosition.call(this) };
-	returnObject.prototype.initializeCanvas          = function (config) { return initializeCanvas.call(this, config) };
+	
+	returnObject.prototype.lastPointerPosition             = {'x':undefined,'y':undefined};
+	returnObject.prototype.currentPointerPosition          = {'x':undefined,'y':undefined};
+	returnObject.prototype.getContext 	                   = function (id) { return getContext.call(this, id) };
+	returnObject.prototype.getElement                      = function (id) { return getElement.call(this, id) };
+	returnObject.prototype.getCanvas                       = function (id) { return getCanvas.call(this, id) };
+	returnObject.prototype.createCanvas                    = function (id, parent) { return createCanvas.call(this, id, parent) }; 
+	returnObject.prototype.setStyle                        = function (config) { return setStyle.call(this, config) };
+	returnObject.prototype.setCurrentPointerPosition       = function (coordinate) { return setCurrentPointerPosition.call(this, coordinate) };
+	returnObject.prototype.getCurrentPointerPosition       = function (e) { return getCurrentPointerPosition.call(this, e) };
+	returnObject.prototype.setLastPointerPosition          = function (x, y) { return setLastPointerPosition.call(this, x, y) };
+	returnObject.prototype.getLastPointerPosition          = function () { return getLastPointerPosition.call(this) };
+	returnObject.prototype.translateEventToPointerPosition = function (e) { return translateEventToPointerPosition.call(this, e) };
+	returnObject.prototype.initializeCanvas                = function (config) { return initializeCanvas.call(this, config) };
 	
 	var canvas = Object.create(returnObject.prototype);
 

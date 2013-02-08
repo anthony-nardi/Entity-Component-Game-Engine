@@ -5,7 +5,7 @@ moduleLoader.imports("render", ["ec"], function (ec) {
 	var render = function () {
 
 		var gameObjects = ec.list,
-			totalGameObjects = gameObjects.length;
+     	totalGameObjects = gameObjects.length;
 
 		for (var i = 0; i < totalGameObjects; i += 1) {
 

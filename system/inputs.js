@@ -163,10 +163,8 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
 		
 		if (this === c.element) {
 		
-			e.to       = c.getCurrentPointerPosition(e);
-			e.from     = c.getLastPointerPosition();
-			
-			c.setLastPointerPosition(e.to);
+			c.setLastPointerPosition(c.getCurrentPointerPosition());
+			c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
 			
 		}
 
@@ -180,10 +178,8 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
 
 		if (this === c.element) {
 		
-			e.to = c.getCurrentPointerPosition(e);
-			e.from = c.getLastPointerPosition();
-
-			c.setLastPointerPosition(e.to);
+			c.setLastPointerPosition(c.getCurrentPointerPosition());
+			c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
 
 			events.off.call(c.element, 'mousemove', handleMouseMove);
 
@@ -199,11 +195,9 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
 
 		if (this === c.element) {
 
-			e.to = c.getCurrentPointerPosition(e);
-			e.from = c.getLastPointerPosition();
-
-			c.setLastPointerPosition(e.to);
-
+			c.setLastPointerPosition(c.getCurrentPointerPosition());
+			c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
+			
 			events.on.call(c.element, 'mousemove', handleMouseMove);
 
 		}
@@ -217,12 +211,10 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
 		var c = canvas.getCanvas(e.target.id);
 
 		if (this === c.element) {
-
-			e.to = c.getCurrentPointerPosition(e);
-			e.from = c.getLastPointerPosition();
-
-			c.setLastPointerPosition(e.to);
 			
+			c.setLastPointerPosition(c.getCurrentPointerPosition());
+			c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
+						
 		}
 
 		list['mousemove'] = e;
