@@ -1,12 +1,10 @@
 moduleLoader.imports("canvas", [], function () {
 	
-	var list = [],			
+	var list = [],
 	
 			returnObject = function () {};
 
 	var createCanvas = function (id, parent) {
-		
-		var newCanvas = Object.create(canvas);
 
 		if (!list[id]) {
 		
@@ -18,27 +16,39 @@ moduleLoader.imports("canvas", [], function () {
 				document.body.appendChild(list[id]);
 			}
 			
-			list[id].canvasId = id;
-			list[id].canvas = newCanvas;
-			newCanvas.canvasId = id;
-			newCanvas.element = list[id];
+			list[id].id = id;		
+			list[id].canvas = this;
 
-			return newCanvas;			
+			this.element = list[id];
+			this.canvasId = id;
+
+			return this;			
 
 		}
 	
 	};
 
-	var getCanvas = function (id) { return list[id] };
+	var getCanvas = function (id) { return list[id || this.canvasId].canvas };
 
-	var getContext = function (id) { return getCanvas(id).getContext('2d') };
+	var getElement = function (id) { return list[id || this.canvasId] };
 
-	var setStyles = function (config) {
+	var getContext = function (id) { return getElement	(id || this.canvasId).getContext('2d') };
+
+	var setStyle = function (config) {
 		
+		var canvasElement = this.getElement();
+
 		for (var prop in config) {
+
 			if (config.hasOwnProperty(prop)) {
-				this.element.style[prop] = config[prop];				
+				canvasElement.style[prop] = config[prop];				
 			}
+
+		}
+
+		if (config.width && config.height) {
+			canvasElement.width = config.width.split('px')[0] * 1;
+			canvasElement.height = config.height.split('px')[0] * 1;
 		}
 		
 		return this;
@@ -47,8 +57,8 @@ moduleLoader.imports("canvas", [], function () {
 
 	var getCurrentPointerPosition = function (e) {
 		return {
-			'x' : Math.floor(e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - canvas(e.target.id).offsetLeft),
-			'y' : Math.floor(e.clientY + document.body.scrollTop + document.documentElement.scrollTop - canvas(e.target.id).offsetTop)
+			'x' : Math.floor(e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - getElement(e.target.id).offsetLeft),
+			'y' : Math.floor(e.clientY + document.body.scrollTop + document.documentElement.scrollTop - getElement(e.target.id).offsetTop)
 		};
 	};
 
@@ -63,27 +73,26 @@ moduleLoader.imports("canvas", [], function () {
 	};
 
 	var initializeCanvas = function (config) {
-		console.log(this)
-		var canvas = createCanvas(config.id, config.parent);
-		
-		canvas.setStyles(config.style);
 
-		this.ctx = canvas.getContext(config.id);
-		console.log(this)
+		this.createCanvas(config.id, config.parent);
+		
+		this.setStyle(config.style);
+
 		return this;
 
 	};
 
-	returnObject.prototype.getContext 	             = function (id) { return getContext(id) };
-	returnObject.prototype.createCanvas              = function (id, parent) { return createCanvas(id, parent) }; 
-	returnObject.prototype.setStyles                 = function (config) { return setStyles.call(this, config) };
-	returnObject.prototype.getCurrentPointerPosition = function (e) { return getCoordinates(e) };
+	returnObject.prototype.getContext 	             = function (id) { return getContext.call(this, id) };
+	returnObject.prototype.getElement                = function (id) { return getElement.call(this, id) };
+	returnObject.prototype.getCanvas                 = function (id) { return getCanvas.call(this, id) };
+	returnObject.prototype.createCanvas              = function (id, parent) { return createCanvas.call(this, id, parent) }; 
+	returnObject.prototype.setStyle                  = function (config) { return setStyle.call(this, config) };
+	returnObject.prototype.getCurrentPointerPosition = function (e) { return getCurrentPointerPosition.call(this, e) };
 	returnObject.prototype.lastPointerPosition       = {'x':undefined,'y':undefined};
 	returnObject.prototype.setLastPointerPosition    = function (x, y) { return setLastPointerPosition.call(this, x, y) };
 	returnObject.prototype.getLastPointerPosition    = function () { return getLastPointerPosition.call(this) };
 	returnObject.prototype.initializeCanvas          = function (config) { return initializeCanvas.call(this, config) };
-	returnObject.prototype.list 				             = list;
-
+	
 	var canvas = Object.create(returnObject.prototype);
 
 	return canvas;

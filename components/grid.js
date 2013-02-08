@@ -1,4 +1,4 @@
-;/*======================================================================================
+/*======================================================================================
 -------------------------------------------GRID----------------------------------------
 ======================================================================================*/
 moduleLoader.imports("grid", ['canvas'], function (canvas) {
@@ -21,6 +21,8 @@ moduleLoader.imports("grid", ['canvas'], function (canvas) {
 		if (config.height && config.width) {
 
 			this.tileMap = [];
+			this.gridId = config.id;
+			delete config.id;
 
 			for (var prop in config) {
 				if (config.hasOwnProperty(prop)) {
@@ -39,6 +41,43 @@ moduleLoader.imports("grid", ['canvas'], function (canvas) {
 
 		return this;
 	
+	};
+
+	prototype.tileOffset = function () {
+		
+		return {
+			'x' : Math.floor(this.scroll.x / this.tile.width),
+			'y' : Math.floor(this.scroll.y / this.tile.height)
+		};
+
+	};
+
+	prototype.tileOffsetX = function () {
+		
+		return Math.floor(this.scroll.x / this.tile.width);
+		
+	};
+
+	prototype.tileOffsetY = function () {
+		
+		return Math.floor(this.scroll.y / this.tile.height);
+
+	};
+
+	prototype.tileRowCount = function () {
+
+		var count = this.tileOffsetX() + Math.floor(this.getElement().width / this.tile.width) + 1;
+
+		return count * this.tile.width > this.width * this.tile.width ? grid.width : count;
+	
+	};
+
+	prototype.tileColCount = function () {
+
+		var count = this.tileOffsetY() + Math.floor(this.getElement().height / this.tile.height) + 1;
+
+		return count * this.tile.height > this.height * this.tile.height ? grid.height : count;
+
 	};
 
 	var grid = Object.create(prototype);

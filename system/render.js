@@ -16,10 +16,10 @@ moduleLoader.imports("render", ["ec"], function (ec) {
 			}
 
 		}
+
 	};
 
 	returnObject = function () { return render() };
-	returnObject.list = ec
 	return returnObject;
 
 });

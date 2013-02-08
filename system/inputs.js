@@ -159,14 +159,14 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
 
 	var handleMouseClick = function (e) {
 
-		var canvasElement = canvas.getCanvas(e.target.id);
+		var c = canvas.getCanvas(e.target.id);
 		
-		if (this === canvasElement) {
+		if (this === c.element) {
 		
-			e.to       = canvasElement.getCurrentPointerPosition(e);
-			e.from     = canvasElement.getLastPointerPosition();
+			e.to       = c.getCurrentPointerPosition(e);
+			e.from     = c.getLastPointerPosition();
 			
-			canvasElement.setLastPointerPosition(e.to);
+			c.setLastPointerPosition(e.to);
 			
 		}
 
@@ -176,16 +176,16 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
 
 	var handleMouseUp = function (e) {
 
-		var canvasElement = canvas.getCanvas(e.target.id);
+		var c = canvas.getCanvas(e.target.id);
 
-		if (this === canvasElement) {
+		if (this === c.element) {
 		
-			e.to = canvasElement.getCurrentPointerPosition(e);
-			e.from = canvasElement.getLastPointerPosition();
+			e.to = c.getCurrentPointerPosition(e);
+			e.from = c.getLastPointerPosition();
 
-			canvasElement.setLastPointerPosition(e.to);
+			c.setLastPointerPosition(e.to);
 
-			events.off.call(canvasElement, 'mousemove', handleMouseMove);
+			events.off.call(c.element, 'mousemove', handleMouseMove);
 
 		}
 		
@@ -195,16 +195,16 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
 
 	var handleMouseDown = function (e) {
 
-		var canvasElement = canvas.getCanvas(e.target.id);
+		var c = canvas.getCanvas(e.target.id);
 
-		if (this === canvasElement) {
+		if (this === c.element) {
 
-			e.to = canvasElement.getCurrentPointerPosition(e);
-			e.from = canvasElement.getLastPointerPosition();
+			e.to = c.getCurrentPointerPosition(e);
+			e.from = c.getLastPointerPosition();
 
-			canvasElement.setLastPointerPosition(e.to);
+			c.setLastPointerPosition(e.to);
 
-			events.on.call(canvasElement, 'mousemove', handleMouseMove);
+			events.on.call(c.element, 'mousemove', handleMouseMove);
 
 		}
 
@@ -214,14 +214,14 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
 
 	var handleMouseMove = function (e) {
 
-		var canvasElement = canvas.getCanvas(e.target.id);
+		var c = canvas.getCanvas(e.target.id);
 
-		if (this === canvasElement) {
+		if (this === c.element) {
 
-			e.to = canvasElement.getCurrentPointerPosition(e);
-			e.from = canvasElement.getLastPointerPosition();
+			e.to = c.getCurrentPointerPosition(e);
+			e.from = c.getLastPointerPosition();
 
-			canvasElement.setLastPointerPosition(e.to);
+			c.setLastPointerPosition(e.to);
 			
 		}
 
@@ -261,13 +261,11 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
 
 	var registerCanvas = function (id) {
 
-		if (canvas.list[id]) {
+		var canvasElement = canvas.getElement(id);
 		
-			events.on.call(canvas.getCanvas(id), 'click', handleMouseClick);
-			events.on.call(canvas.getCanvas(id), 'mouseup', handleMouseUp);
-			events.on.call(canvas.getCanvas(id), 'mousedown', handleMouseDown);
-		
-		}
+		events.on.call(canvasElement, 'click', handleMouseClick);
+		events.on.call(canvasElement, 'mouseup', handleMouseUp);
+		events.on.call(canvasElement, 'mousedown', handleMouseDown);
 	
 	};
 
