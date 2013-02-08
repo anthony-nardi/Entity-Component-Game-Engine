@@ -1,7 +1,7 @@
 /*======================================================================================
 --------------------------------------------CLOCK--------------------------------------
 ======================================================================================*/
-moduleLoader.imports('clock', ['update','render', 'inputs', 'events'], function (update, render, inputs, events) {
+moduleLoader.imports('clock', ['update','render', 'inputs', 'events', 'fps'], function (update, render, inputs, events, fps) {
    
   var returnObject = {},
   
@@ -11,7 +11,9 @@ moduleLoader.imports('clock', ['update','render', 'inputs', 'events'], function 
   dtBuffer = 0,
   
   looping = false,
-  SIM_RES = 10;
+  SIM_RES = 10,
+
+  renderOpsPerSec = Object.create(fps);
 
   var loop = function () {
   
@@ -25,8 +27,9 @@ moduleLoader.imports('clock', ['update','render', 'inputs', 'events'], function 
       update(SIM_RES);
       dtBuffer -= SIM_RES;
     }
-    
+    renderOpsPerSec.start();
     render();
+    renderOpsPerSec.end();
     inputs.clear();
     last = now;
 
