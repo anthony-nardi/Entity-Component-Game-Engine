@@ -43,41 +43,45 @@ moduleLoader.imports("grid", ['canvas'], function (canvas) {
 	
 	};
 
-	prototype.tileOffset = function () {
-		
+	prototype.getTileWidth = function () {
+		return this.tile.width * this.zoom;
+	};
+
+	prototype.getTileHeight = function () {
+		return this.tile.height * this.zoom;
+	};
+
+	prototype.tileOffsetX = function () {		
+		return Math.floor(this.scroll.x / (this.tile.width * this.zoom));		
+	};
+
+	prototype.tileOffsetY = function () {		
+		return Math.floor(this.scroll.y / this.getTileHeight());
+	};
+
+	prototype.tileOffset = function () {		
 		return {
-			'x' : Math.floor(this.scroll.x / this.tile.width),
-			'y' : Math.floor(this.scroll.y / this.tile.height)
+			'x' : Math.floor(this.scroll.x / this.getTileWidth()),
+			'y' : Math.floor(this.scroll.y / this.getTileHeight())
 		};
-
 	};
 
-	prototype.tileOffsetX = function () {
-		
-		return Math.floor(this.scroll.x / this.tile.width);
-		
-	};
-
-	prototype.tileOffsetY = function () {
-		
-		return Math.floor(this.scroll.y / this.tile.height);
-
+	prototype.maxTilesInView = function () {
+		if (this.tile.width === this.tile.height) {
+			return Math.floor(this.getElement().width / this.getTileWidth());
+		} else {
+			alert("Tile width and height are not equal.");
+		}
 	};
 
 	prototype.tileRowCount = function () {
-
-		var count = this.tileOffsetX() + Math.floor(this.getElement().width / this.tile.width) + 1;
-
-		return count * this.tile.width > this.width * this.tile.width ? grid.width : count;
-	
+		var count = this.tileOffsetX() + this.maxTilesInView() + 1;
+		return count * this.getTileWidth() > this.width * this.getTileWidth() ? grid.width : count;	
 	};
 
 	prototype.tileColCount = function () {
-
-		var count = this.tileOffsetY() + Math.floor(this.getElement().height / this.tile.height) + 1;
-
-		return count * this.tile.height > this.height * this.tile.height ? grid.height : count;
-
+		var count = this.tileOffsetX() + this.maxTilesInView() + 1;
+		return count * this.getTileHeight() > this.height * this.getTileHeight() ? grid.height : count;
 	};
 
 	var grid = Object.create(prototype);

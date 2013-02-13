@@ -1,8 +1,10 @@
 moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (grid, ec, inputs, events) {
 
-  var viewport = ec(grid),
-      handle   = [],
-      state    = {
+  var viewport = ec(grid),  //inherit from (grid <- canvas)
+      
+      handle   = [], //dom event handlers k -> v
+      
+      state    = { //state of viewport
         'moving' : false,
         'zooming' : false
       };
@@ -22,8 +24,8 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
     'width':100,
     'height':100,
     'tile': {
-      'width':10,
-      'height':10
+      'width':100,
+      'height':100
     },
     'scroll': {
       'x':0,
@@ -73,12 +75,12 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
         tileRowCount  = this.tileRowCount(),
         tileColCount  = this.tileColCount();
 
-    ctx.fillStyle = '#E093FF  ';
+    ctx.fillStyle = '#E093FF';
     ctx.fillRect(0, 0, width, height);
 
-    for (var x = tileOffsetX; x < tileRowCount; x += 1) {
-      for (var y = tileOffsetY; y < tileColCount; y += 1) {
-        ctx.strokeRect(this.tile.width * x - this.tileOffsetX(), this.tile.height * y - this.tileOffsetY(), this.tile.width, this.tile.height);
+    for (var x = tileOffsetX; x < tileRowCount + 1; x += 1) {
+      for (var y = tileOffsetY; y < tileColCount + 1; y += 1) {
+        ctx.strokeRect(Math.floor(this.getTileWidth()) * x - this.scroll.x, Math.floor(this.getTileHeight()) * y - this.scroll.y, this.tile.width * this.zoom, this.tile.height * this.zoom);
       }
     }
 
@@ -91,11 +93,10 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
   viewport.update.push(function () {
     
     if (state['moving']) {
-      viewport.scroll.x += (viewport.getCurrentPointerPosition().x - viewport.getLastPointerPosition().x);
-      viewport.scroll.y += (viewport.getCurrentPointerPosition().y - viewport.getLastPointerPosition().y);
-      console.log(viewport.getCurrentPointerPosition())
-      console.log(viewport.getLastPointerPosition())
+      viewport.scroll.x -= (viewport.getCurrentPointerPosition().x - viewport.getLastPointerPosition().x);
+      viewport.scroll.y -= (viewport.getCurrentPointerPosition().y - viewport.getLastPointerPosition().y);
     }
+
     state.moving = false;
   
   });
