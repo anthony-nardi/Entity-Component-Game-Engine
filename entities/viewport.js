@@ -6,7 +6,7 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
       
       state    = { //state of viewport
         'moving' : false,
-        'zooming' : false
+        'zooming' : 0
       };
 
   viewport.initializeCanvas({    
@@ -21,8 +21,8 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
     }
   }).initializeGrid({
     'id':'viewport',
-    'width':100,
-    'height':100,
+    'width':10,
+    'height':10,
     'tile': {
       'width':100,
       'height':100
@@ -49,7 +49,7 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
   });
 
   handle['mousemove'] = function (event) {
-    console.log(event)
+
     if (event.target.id === viewport.canvasId) {
       state.moving = true;
     }
@@ -62,6 +62,14 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
       state.moving = false;
     }
   
+  }
+
+  handle['mousewheel'] = function (event) {
+    if (event.wheelDelta > 0) {
+      state.zooming = -1;
+    } else {
+      state.zooming = 1;
+    }
   }
   
   var render = function () {
@@ -78,9 +86,9 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
     ctx.fillStyle = '#E093FF';
     ctx.fillRect(0, 0, width, height);
 
-    for (var x = tileOffsetX; x < tileRowCount + 1; x += 1) {
-      for (var y = tileOffsetY; y < tileColCount + 1; y += 1) {
-        ctx.strokeRect(Math.floor(this.getTileWidth()) * x - this.scroll.x, Math.floor(this.getTileHeight()) * y - this.scroll.y, this.tile.width * this.zoom, this.tile.height * this.zoom);
+    for (var x = tileOffsetX < 0 ? 0 : tileOffsetX; x < tileRowCount + 1; x += 1) {
+      for (var y = tileOffsetY < 0 ? 0 : tileOffsetY; y < tileColCount + 1; y += 1) {
+        ctx.strokeRect(this.getTileWidth() * x - this.scroll.x, this.getTileHeight() * y - this.scroll.y, this.getTileWidth(), this.getTileHeight());
       }
     }
 
@@ -95,9 +103,18 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
     if (state['moving']) {
       viewport.scroll.x -= (viewport.getCurrentPointerPosition().x - viewport.getLastPointerPosition().x);
       viewport.scroll.y -= (viewport.getCurrentPointerPosition().y - viewport.getLastPointerPosition().y);
+      state.moving = false;
     }
-
-    state.moving = false;
+    if (state['zooming']) {
+      state['zooming'] === 1 ? 
+      viewport.zoom < 4 ? 
+      viewport.zoom += .01 : 
+      viewport.zoom = 4 : 
+      viewport.zoom <= .25 ? 
+      viewport.zoom = .25 : 
+      viewport.zoom -= .01;
+      state['zooming'] = 0;
+    }
   
   });
 

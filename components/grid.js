@@ -76,12 +76,12 @@ moduleLoader.imports("grid", ['canvas'], function (canvas) {
 
 	prototype.tileRowCount = function () {
 		var count = this.tileOffsetX() + this.maxTilesInView() + 1;
-		return count * this.getTileWidth() > this.width * this.getTileWidth() ? grid.width : count;	
+		return count * this.getTileWidth() > this.width * this.getTileWidth() ? this.width : count;	
 	};
 
 	prototype.tileColCount = function () {
-		var count = this.tileOffsetX() + this.maxTilesInView() + 1;
-		return count * this.getTileHeight() > this.height * this.getTileHeight() ? grid.height : count;
+		var count = this.tileOffsetY() + this.maxTilesInView() + 1;
+		return count * this.getTileHeight() > this.height * this.getTileHeight() ? this.height : count;
 	};
 
 	var grid = Object.create(prototype);
