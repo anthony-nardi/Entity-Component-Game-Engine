@@ -71,6 +71,10 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
       state.zooming = 1;
     }
   }
+
+  handle['click'] = function (event) {
+    console.log(viewport.getClickedTile(event));
+  };
   
   var render = function () {
 
@@ -85,7 +89,7 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
 
     ctx.fillStyle = '#E093FF';
     ctx.fillRect(0, 0, width, height);
-
+    ctx.strokeStyle = '#EEEf00';
     for (var x = tileOffsetX < 0 ? 0 : tileOffsetX; x < tileRowCount + 1; x += 1) {
       for (var y = tileOffsetY < 0 ? 0 : tileOffsetY; y < tileColCount + 1; y += 1) {
         ctx.strokeRect(this.getTileWidth() * x - this.scroll.x, this.getTileHeight() * y - this.scroll.y, this.getTileWidth(), this.getTileHeight());
