@@ -42,7 +42,7 @@ moduleLoader.imports("grid", ['canvas'], function (canvas) {
 		return this;
 	
 	};
-  
+
 	prototype.getClickedTile = function (event) {
 		var coordinates = this.translateEventToPointerPosition(event);
 		return {
@@ -72,6 +72,14 @@ moduleLoader.imports("grid", ['canvas'], function (canvas) {
 			'x' : Math.floor(this.scroll.x / this.getTileWidth()),
 			'y' : Math.floor(this.scroll.y / this.getTileHeight())
 		};
+	};
+
+	prototype.getWidth = function () {
+		return this.width + 1;
+	};
+
+	prototype.getScrollX = function () {
+		return this.scroll.x + this.getTileWidth() * this.getWidth() / 2;
 	};
 
 	prototype.maxTilesInView = function () {

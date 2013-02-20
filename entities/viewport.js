@@ -21,8 +21,8 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
     }
   }).initializeGrid({
     'id':'viewport',
-    'width':10,
-    'height':10,
+    'width':50,
+    'height':50,
     'tile': {
       'width':100,
       'height':100
@@ -90,6 +90,7 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
     ctx.fillStyle = '#E093FF';
     ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = '#EEEf00';
+    
     for (var x = tileOffsetX < 0 ? 0 : tileOffsetX; x < tileRowCount + 1; x += 1) {
       for (var y = tileOffsetY < 0 ? 0 : tileOffsetY; y < tileColCount + 1; y += 1) {
         ctx.strokeRect(this.getTileWidth() * x - this.scroll.x, this.getTileHeight() * y - this.scroll.y, this.getTileWidth(), this.getTileHeight());
@@ -102,23 +103,37 @@ moduleLoader.imports('viewport', ['grid','ec','inputs', 'events'], function (gri
   
   viewport.update = [];
   
+  var zoom = function () {
+    var lastTileWidth = viewport.getTileWidth(),
+        lastTileHeight = viewport.getTileHeight(),
+        deltaWidth = 0, deltaHeight = 0;
+
+      state['zooming'] === 1   ? 
+        viewport.zoom    <   4   ? viewport.zoom    +=  .01 : viewport.zoom    =   4   : 
+        viewport.zoom    <=  .25 ? 
+          viewport.zoom    =   .25 : 
+          viewport.zoom    -=  .01;
+      
+      state['zooming'] =   0;
+
+      deltaWidth = viewport.getTileWidth() - lastTileWidth;
+      deltaHeight = viewport.getTileHeight() - lastTileHeight;
+
+      viewport.scroll.x += deltaWidth * ((viewport.scroll.x + viewport.getElement().width / 2) / viewport.getTileWidth());
+      viewport.scroll.y += deltaHeight * ((viewport.scroll.y + viewport.getElement().height / 2) / viewport.getTileHeight());
+      
+  };
+
+  var move = function () {
+    viewport.scroll.x -= (viewport.getCurrentPointerPosition().x - viewport.getLastPointerPosition().x);
+    viewport.scroll.y -= (viewport.getCurrentPointerPosition().y - viewport.getLastPointerPosition().y);
+    state.moving = false;
+  };
+
   viewport.update.push(function () {
     
-    if (state['moving']) {
-      viewport.scroll.x -= (viewport.getCurrentPointerPosition().x - viewport.getLastPointerPosition().x);
-      viewport.scroll.y -= (viewport.getCurrentPointerPosition().y - viewport.getLastPointerPosition().y);
-      state.moving = false;
-    }
-    if (state['zooming']) {
-      state['zooming'] === 1 ? 
-      viewport.zoom < 4 ? 
-      viewport.zoom += .01 : 
-      viewport.zoom = 4 : 
-      viewport.zoom <= .25 ? 
-      viewport.zoom = .25 : 
-      viewport.zoom -= .01;
-      state['zooming'] = 0;
-    }
+    if (state['moving']) move();
+    if (state['zooming']) zoom();
   
   });
 

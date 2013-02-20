@@ -28,6 +28,18 @@ moduleLoader.imports("canvas", [], function () {
 	
 	};
 
+	var getCenterCoordinates = function () {
+		var canvas = this.getElement(),
+		    width  = canvas.width / 2,
+		    height = canvas.height / 2;
+
+		return {
+			'x':width,
+			'y':height
+		};
+
+	};
+
 	var getCanvas = function (id) { return list[id || this.canvasId].canvas };
 
 	var getElement = function (id) { return list[id || this.canvasId] };
