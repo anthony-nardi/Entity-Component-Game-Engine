@@ -9,9 +9,11 @@ moduleLoader.imports("render", ["ec"], function (ec) {
 
 		for (var i = 0; i < totalGameObjects; i += 1) {
 
-			if (gameObjects[i].render) {
+			if (gameObjects[i].render.length) {
 
-				gameObjects[i].render();
+				for (var j = 0; j < gameObjects[i].render.length; j += 1) {
+					gameObjects[i].render[j].call(gameObjects[i]);
+				}
 				
 			}
 

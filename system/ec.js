@@ -49,6 +49,8 @@ moduleLoader.imports("ec", [], function () {
 
 	  entityInstance.addComponent = addComponent;
 	  entityInstance.removeComponent = removeComponent;
+	  entityInstance.update = [];
+	  entityInstance.render = [];
 	  entityInstance.entityId = uid();
 	  list[entityInstance.entityId] = entityInstance;
 

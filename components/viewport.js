@@ -7,18 +7,17 @@ moduleLoader.imports('viewport', ['grid'], function (grid) {
      -zooming
      -moving
   */
+
 	prototype.state = prototype.state || {};
+	//Perhaps there will be a certain event that is handled up the chain.
+	prototype.handle = prototype.handle || [];
 	prototype.state.zooming = 0; // -1 Zoom Out 1 Zoom In
 	prototype.state.moving  = false;
-	
+	prototype.zoom   = 1;
 	prototype.scroll = {
 		'x' : 0,
 		'y' : 0
 	};
-
-	prototype.zoom   = 0;
-  
-
 
 	prototype.getClickedTile = function (event) { //viewport
 		var coordinates = this.translateEventToPointerPosition(event);
@@ -72,13 +71,22 @@ moduleLoader.imports('viewport', ['grid'], function (grid) {
 	}
 
 	prototype.tileRowCount = function () { //viewport
+		
 		var count = this.tileOffsetX() + this.maxTilesInRow() + 1;
-		return count * this.getTileWidth() > this.width * this.getTileWidth() ? this.width : count;	
+		
+		return count * this.getTileWidth() > this.width * this.getTileWidth() ? 
+
+					 this.width : count;	
 	};
 
 	prototype.tileColCount = function () { //viewport
+		
 		var count = this.tileOffsetY() + this.maxTilesInCol() + 1;
-		return count * this.getTileHeight() > this.height * this.getTileHeight() ? this.height : count;
+		
+		return count * this.getTileHeight() > this.height * this.getTileHeight() ? 
+
+					 this.height : count;
+	
 	};
 
 	var viewport = Object.create(prototype);

@@ -1,40 +1,40 @@
 moduleLoader.imports('mainView', ['viewport','ec','inputs', 'events'], function (viewport, ec, inputs, events) {
 
-  var mainView = ec(viewport),  //inherit from (grid <- canvas)
-      
-      handle   = [], //dom event handlers k -> v
-      
-      state    = { //state of viewport
-        'moving' : false,
-        'zooming' : 0
-      };
+  var mainView = ec(viewport),  //inherit from (viewport <- grid <- canvas)
+      handle   = mainView.handle,
+      state    = mainView.state;
 
   mainView.initializeCanvas({    
+    
     'id':'viewport',
+    
     'parent':document.getElementById('container'),
+    
     'style': {
+      
       'width':'640px',
       'height':'480px',
       'margin':'auto',
       'border':'1px solid black',
       'display':'block'
+    
     }
+  
   }).initializeGrid({
+    
     'id':'viewport',
-    'width':50,
-    'height':50,
+    
+    'width':20,
+    'height':20,
+    
     'tile': {
-      'width':100,
-      'height':100
-    },
-    'scroll': {
-      'x':0,
-      'y':0
-    },
-    'zoom':1
+      'width':25,
+      'height':25
+    }
+  
   });
 
-  inputs.registerCanvas(mainView.canvasId);  //registers click, mouseup, and mousedown events
+  inputs.registerCanvas(mainView.getElement().id);  //registers click, mouseup, and mousedown events
 
   events.on('inputs', function (eventList) {  //A special event that dispatches dom events every tick.  TODO - Put this on viewport model
     
@@ -65,43 +65,39 @@ moduleLoader.imports('mainView', ['viewport','ec','inputs', 'events'], function 
   }
 
   handle['mousewheel'] = function (event) {
-    if (event.wheelDelta > 0) {
-      state.zooming = -1;
-    } else {
-      state.zooming = 1;
-    }
+    event.wheelDelta > 0 ? state.zooming = -1 : state.zooming = 1;
   }
 
   handle['click'] = function (event) {
     console.log(mainView.getClickedTile(event));
   };
   
-  var render = function () {
-
+  var render = (function () {
+    
     var canvasElement = mainView.getElement(),
         ctx           = mainView.getContext();
         width         = canvasElement.width,
-        height        = canvasElement.height,
-        tileOffsetX   = this.tileOffsetX(),
-        tileOffsetY   = this.tileOffsetY(),
-        tileRowCount  = this.tileRowCount(),
-        tileColCount  = this.tileColCount();
+        height        = canvasElement.height;
 
-    ctx.fillStyle = '#E093FF';
-    ctx.fillRect(0, 0, width, height);
-    ctx.strokeStyle = '#EEEf00';
-    
-    for (var x = tileOffsetX < 0 ? 0 : tileOffsetX; x < tileRowCount + 1; x += 1) {
-      for (var y = tileOffsetY < 0 ? 0 : tileOffsetY; y < tileColCount + 1; y += 1) {
-        ctx.strokeRect(this.getTileWidth() * x - this.scroll.x, this.getTileHeight() * y - this.scroll.y, this.getTileWidth(), this.getTileHeight());
+    return function () {
+
+      var tileOffsetX   = this.tileOffsetX(),
+          tileOffsetY   = this.tileOffsetY(),
+          tileRowCount  = this.tileRowCount(),
+          tileColCount  = this.tileColCount();
+
+      ctx.fillStyle = '#E093FF';
+      ctx.fillRect(0, 0, width, height);
+      ctx.strokeStyle = '#EEEf00';
+      
+      for (var x = tileOffsetX < 0 ? 0 : tileOffsetX; x < tileRowCount + 1; x += 1) {
+        for (var y = tileOffsetY < 0 ? 0 : tileOffsetY; y < tileColCount + 1; y += 1) {
+          ctx.strokeRect(this.getTileWidth() * x - this.scroll.x, this.getTileHeight() * y - this.scroll.y, this.getTileWidth(), this.getTileHeight());
+        }
       }
-    }
+    };
 
-  };
-  
-
-  
-  mainView.update = [];
+  }());
   
   var zoom = function () {  //instance
     
@@ -131,15 +127,13 @@ moduleLoader.imports('mainView', ['viewport','ec','inputs', 'events'], function 
     state.moving = false;
   };
 
-  mainView.update.push(function () {  //instance
-    
+  mainView.update.push(function () {  //instance    
     if (state['moving']) move();
-    if (state['zooming']) zoom();
-  
+    if (state['zooming']) zoom();  
   });
+  
+  mainView.render.push(render);
 
-
-	mainView.render = render;
   return mainView;
 
 });
