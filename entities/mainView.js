@@ -1,4 +1,4 @@
-moduleLoader.imports('mainView', ['viewport','ec','inputs', 'events'], function (viewport, ec, inputs, events) {
+moduleLoader.imports('mainView', ['viewport','ec','events'], function (viewport, ec, events) {
 
   var mainView = ec(viewport),  //inherit from (viewport <- grid <- canvas)
       handle   = mainView.handle,
@@ -33,8 +33,6 @@ moduleLoader.imports('mainView', ['viewport','ec','inputs', 'events'], function 
     }
   
   });
-
-  inputs.registerCanvas(mainView.getElement().id);  //registers click, mouseup, and mousedown events
 
   events.on('inputs', function (eventList) {  //A special event that dispatches dom events every tick.  TODO - Put this on viewport model
     

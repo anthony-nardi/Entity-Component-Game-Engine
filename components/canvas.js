@@ -113,6 +113,8 @@ moduleLoader.imports("canvas", [], function () {
 		
 		this.setStyle(config.style);
 
+		moduleLoader.list.inputs.registerCanvas(this.getElement().id);
+
 		return this;
 
 	};
