@@ -34,18 +34,6 @@ moduleLoader.imports('mainView', ['viewport','ec','events'], function (viewport,
   
   });
 
-  events.on('inputs', function (eventList) {  //A special event that dispatches dom events every tick.  TODO - Put this on viewport model
-    
-    for (event in eventList) {
-    
-      if (!eventList.hasOwnProperty(event) || !handle[event]) continue;
-      
-      handle[event](eventList[event]);
-    
-    }
-  
-  });
-
   handle['mousemove'] = function (event) {
 
     if (event.target.id === mainView.canvasId) {

@@ -109,11 +109,26 @@ moduleLoader.imports("canvas", [], function () {
 
 	var initializeCanvas = function (config) {
 
+		var events = moduleLoader.list.events,
+				inputs = moduleLoader.list.inputs;
+
 		this.createCanvas(config.id, config.parent);
 		
 		this.setStyle(config.style);
 
-		moduleLoader.list.inputs.registerCanvas(this.getElement().id);
+		inputs.registerCanvas(this.getElement().id);
+
+		events.on.call(this, 'inputs', function (eventList) {  //A special event that dispatches dom events every tick.  TODO - Put this on viewport model
+    
+    for (event in eventList) {
+    
+      if (!eventList.hasOwnProperty(event) || !this.handle[event]) continue;
+      
+      this.handle[event].call(this, eventList[event]);
+    
+    }
+  
+  });
 
 		return this;
 
