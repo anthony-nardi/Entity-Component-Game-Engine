@@ -2,153 +2,178 @@ moduleLoader.imports("canvas", [], function () {
 	
 	var list = [],
 	
-			returnObject = function () {};
-
-	var createCanvas = function (id, parent) {
-
-		if (!list[id]) {
+	prototype = {
 		
-			list[id] = document.createElement('canvas');
+		'currentPointerPosition': {
+			'x': undefined,
+			'y': undefined
+		},
 		
-			if (parent) {
-				parent.appendChild(list[id]);
-			} else {
-				document.body.appendChild(list[id]);
+		'lastPointerPosition': {
+			'x': undefined,
+			'y': undefined
+		},
+		
+		'createCanvas': function (id, parent) {
+
+			if (!list[id]) {
+			
+				list[id] = document.createElement('canvas');
+			
+				if (parent) {
+					parent.appendChild(list[id]);
+				} else {
+					document.body.appendChild(list[id]);
+				}
+				
+				list[id].id = id;		
+				list[id].canvas = this;
+
+				this.element = list[id];
+				this.canvasId = id;
+
+				return this;			
+
+			}
+		
+		},
+
+		'getCenterCoordinates': function () {
+			
+			var canvas = this.getElement(),
+			    width  = canvas.width / 2,
+			    height = canvas.height / 2;
+
+			return {
+				'x':width,
+				'y':height
+			};
+
+		},
+
+		'getCanvas': function (id) { 
+			
+			return list[id || this.canvasId].canvas;
+		
+		},
+		
+		'getElement': function (id) { 
+		
+			return list[id || this.canvasId];
+		
+		},
+		
+		'getContext': function (id) { 
+		
+			return  this.getElement(id || this.canvasId).getContext('2d');
+		
+		},
+		
+		'setStyle': function (config) {
+			
+			var canvasElement = this.getElement();
+
+			for (var prop in config) {
+
+				if (config.hasOwnProperty(prop)) {
+					canvasElement.style[prop] = config[prop];				
+				}
+
+			}
+
+			if (config.width && config.height) {
+				canvasElement.width = config.width.split('px')[0] * 1;
+				canvasElement.height = config.height.split('px')[0] * 1;
 			}
 			
-			list[id].id = id;		
-			list[id].canvas = this;
-
-			this.element = list[id];
-			this.canvasId = id;
-
-			return this;			
-
-		}
-	
-	};
-
-	var getCenterCoordinates = function () {
-		var canvas = this.getElement(),
-		    width  = canvas.width / 2,
-		    height = canvas.height / 2;
-
-		return {
-			'x':width,
-			'y':height
-		};
-
-	};
-
-	var getCanvas = function (id) { return list[id || this.canvasId].canvas };
-
-	var getElement = function (id) { return list[id || this.canvasId] };
-
-	var getContext = function (id) { return getElement	(id || this.canvasId).getContext('2d') };
-
-	var setStyle = function (config) {
+			return this;
 		
-		var canvasElement = this.getElement();
-
-		for (var prop in config) {
-
-			if (config.hasOwnProperty(prop)) {
-				canvasElement.style[prop] = config[prop];				
-			}
-
-		}
-
-		if (config.width && config.height) {
-			canvasElement.width = config.width.split('px')[0] * 1;
-			canvasElement.height = config.height.split('px')[0] * 1;
-		}
+		},
 		
-		return this;
-	
-	};
+		'getCurrentPointerPosition':  function () {
 
-	var getCurrentPointerPosition = function () {
-	
 			return {
 				'x' : this.currentPointerPosition.x,
 				'y' : this.currentPointerPosition.y
 			}
 
-	};
+		},
 
-	var setCurrentPointerPosition = function (coordinate) {
+		'setCurrentPointerPosition': function (coordinate) {
+console.log('coordinate')
+			this.currentPointerPosition.x = coordinate.x;
+			this.currentPointerPosition.y = coordinate.y;
 
-		this.currentPointerPosition.x = coordinate.x;
-		this.currentPointerPosition.y = coordinate.y;
+			return this;
 
-		return this;
+		},
 
-	};
+		'translateEventToPointerPosition': function (e) {
 
-	var translateEventToPointerPosition = function (e) {
+			return {
 
-		return {
-			'x' : Math.floor(e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - getElement(e.target.id).offsetLeft),
-			'y' : Math.floor(e.clientY + document.body.scrollTop + document.documentElement.scrollTop - getElement(e.target.id).offsetTop)
-		};
+				'x' : Math.floor(
+						e.clientX 
+					+ document.body.scrollLeft 
+					+ document.documentElement.scrollLeft 
+					- this.getElement(e.target.id).offsetLeft
+					),
 
-	};
+				'y' : Math.floor(
+					  e.clientY 
+					+ document.body.scrollTop 
+					+ document.documentElement.scrollTop 
+					- this.getElement(e.target.id).offsetTop
+					)
+			};
 
-	var setLastPointerPosition = function (coordinate) {
+		},
 		
-		this.lastPointerPosition.x = coordinate.x;
-		this.lastPointerPosition.y = coordinate.y;
+		'setLastPointerPosition': function (coordinate) {
+			
+			this.lastPointerPosition.x = coordinate.x;
+			this.lastPointerPosition.y = coordinate.y;
+			
+			return this;
 		
-		return this;
-	
-	};
-
-	var getLastPointerPosition = function () {
-		return this.lastPointerPosition;
-	};
-
-	var initializeCanvas = function (config) {
-
-		var events = moduleLoader.list.events,
-				inputs = moduleLoader.list.inputs;
-
-		this.createCanvas(config.id, config.parent);
+		},
 		
-		this.setStyle(config.style);
+		'getLastPointerPosition': function () {
+		
+			return this.lastPointerPosition;
+		
+		},
 
-		inputs.registerCanvas(this.getElement().id);
+		'initializeCanvas': function (config) {
 
-		events.on.call(this, 'inputs', function (eventList) {  //A special event that dispatches dom events every tick.  TODO - Put this on viewport model
-    
-    for (event in eventList) {
-    
-      if (!eventList.hasOwnProperty(event) || !this.handle[event]) continue;
-      
-      this.handle[event].call(this, eventList[event]);
-    
-    }
-  
-  });
+			var events = moduleLoader.list.events,
+					inputs = moduleLoader.list.inputs;
 
-		return this;
+			this.createCanvas(config.id, config.parent);
+			
+			this.setStyle(config.style);
+
+			inputs.registerCanvas(this.getElement().id);
+
+			events.on.call(this, 'inputs', function (eventList) {  //A special event that dispatches dom events every tick.  TODO - Put this on viewport model
+	    
+		    for (event in eventList) {
+		    
+		      if (!eventList.hasOwnProperty(event) || !this.handle[event]) continue;
+		      
+		      this.handle[event].call(this, eventList[event]);
+		    
+		    }
+	  
+	  	});
+
+			return this;
+
+		}
 
 	};
-	
-	returnObject.prototype.lastPointerPosition             = {'x':undefined,'y':undefined};
-	returnObject.prototype.currentPointerPosition          = {'x':undefined,'y':undefined};
-	returnObject.prototype.getContext 	                   = function (id) { return getContext.call(this, id) };
-	returnObject.prototype.getElement                      = function (id) { return getElement.call(this, id) };
-	returnObject.prototype.getCanvas                       = function (id) { return getCanvas.call(this, id) };
-	returnObject.prototype.createCanvas                    = function (id, parent) { return createCanvas.call(this, id, parent) }; 
-	returnObject.prototype.setStyle                        = function (config) { return setStyle.call(this, config) };
-	returnObject.prototype.setCurrentPointerPosition       = function (coordinate) { return setCurrentPointerPosition.call(this, coordinate) };
-	returnObject.prototype.getCurrentPointerPosition       = function (e) { return getCurrentPointerPosition.call(this, e) };
-	returnObject.prototype.setLastPointerPosition          = function (x, y) { return setLastPointerPosition.call(this, x, y) };
-	returnObject.prototype.getLastPointerPosition          = function () { return getLastPointerPosition.call(this) };
-	returnObject.prototype.translateEventToPointerPosition = function (e) { return translateEventToPointerPosition.call(this, e) };
-	returnObject.prototype.initializeCanvas                = function (config) { return initializeCanvas.call(this, config) };
-	
-	var canvas = Object.create(returnObject.prototype);
+
+	var canvas = Object.create(prototype);
 
 	return canvas;
 

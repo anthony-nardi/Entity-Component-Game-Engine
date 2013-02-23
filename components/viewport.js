@@ -4,21 +4,21 @@ moduleLoader.imports('viewport', ['grid'], function (grid) {
 	 
 	prototype.extend({
    	
-   	'state' : {
-			'zooming' : 0,
-			'moving'  : false
+   	'state': {			
+			'zooming' : 0,		
+			'moving'  : false		
 		},
 		
 		'handle': {},
 		
 		'zoom' : 1,
 		
-		'scroll' : {
-			'x' : 0,
-			'y' : 0
+		'scroll': {		
+			'x' : 0,		
+			'y' : 0		
 		},
 
-		'getClickedTile' : function (event) { //viewport
+		'getClickedTile': function (event) {
 			
 			var coordinates = this.translateEventToPointerPosition(event);
 			
@@ -29,39 +29,42 @@ moduleLoader.imports('viewport', ['grid'], function (grid) {
 		
 		},
 
-		'getTileWidth' : function () { //viewport
-		  
+		'getTileWidth': function () {
+
 		  return this.tile.width * this.zoom;
+	  
 	  },
 		
-		'getTileHeight' : function () { //viewport
+		'getTileHeight': function () {
 		
 		  return this.tile.height * this.zoom;
 	  
 	  },
 		
-		'tileOffsetX' : function () {		//viewport
+		'tileOffsetX': function () {
 		
 		  return Math.floor(this.scroll.x / this.getTileWidth());		
 	  
 	  },
 		
-		'tileOffsetY' : function () {		//viewport
+		'tileOffsetY': function () {
 		  
 		  return Math.floor(this.scroll.y / this.getTileHeight());
 	
 	  },
 		
-		'tileOffset' : function () {		//viewport
+		'tileOffset': function () {
 		
 			return {
+
 				'x' : Math.floor(this.scroll.x / this.getTileWidth()),
 				'y' : Math.floor(this.scroll.y / this.getTileHeight())
+			
 			};
 	  
 	  },
 		
-		'getScrollX' : function () { //viewport
+		'getScrollX': function () {
 		  
 		  return this.scroll.x + this.getTileWidth() * this.getWidth() / 2;
 	
@@ -73,7 +76,7 @@ moduleLoader.imports('viewport', ['grid'], function (grid) {
 	
 	  },
 		
-		'maxTilesInView' : function () { //viewport
+		'maxTilesInView' : function () {
 		
 		  return this.maxTilesInRow() * this.maxTilesInCol();
 	 
@@ -91,7 +94,7 @@ moduleLoader.imports('viewport', ['grid'], function (grid) {
 	  
 	  },
 		
-		'tileRowCount' : function () { //viewport
+		'tileRowCount' : function () {
 		
 		  var count = this.tileOffsetX() + this.maxTilesInRow() + 1;
 		
@@ -100,7 +103,7 @@ moduleLoader.imports('viewport', ['grid'], function (grid) {
 						 this.width : count;	
 	  },
 		
-		'tileColCount' : function () { //viewport
+		'tileColCount' : function () {
 		
 			var count = this.tileOffsetY() + this.maxTilesInCol() + 1;
 			

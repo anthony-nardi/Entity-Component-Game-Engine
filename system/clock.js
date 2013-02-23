@@ -28,9 +28,9 @@ moduleLoader.imports('clock', ['update','render', 'inputs', 'events', 'fps'], fu
       dtBuffer -= SIM_RES;
     }
     
-    renderOpsPerSec.start();
+   // renderOpsPerSec.start();
     render();
-    renderOpsPerSec.end();
+   // renderOpsPerSec.end();
     inputs.clear();
     last = now;
 
