@@ -29,7 +29,7 @@ moduleLoader.imports("events", [], function () {
   
     var event = list[type];
 
-    if (opt) removeListener(this, type, fire);
+    if (opt) window.removeEventListener(name, fire);
     
     if (event.length) {
       
@@ -56,12 +56,10 @@ moduleLoader.imports("events", [], function () {
         
         listeners = list[type],
 
-        listenersCount = listeners.length,
-
         listener = undefined;
 
-    if (listenersCount) {
-      for (var i = 0; i < listenersCount; i += 1) {
+    if (listeners.length) {
+      for (var i = 0; i < listeners.length; i += 1) {
         listener = listeners[i];
         listener[1].call(listener[0], data);
       }
@@ -71,19 +69,11 @@ moduleLoader.imports("events", [], function () {
   
   },
 
-  prototype = {
-
-    'on': on,
-    
-    'off': off,
-
-    'fire': fire,
-
-    'list': list
-
-  },
-
-  events = Object.create(prototype);
+  events = Object.create({
+    'on'  : on,
+    'off' : off,
+    'fire': fire
+  });
 
   return events;
 

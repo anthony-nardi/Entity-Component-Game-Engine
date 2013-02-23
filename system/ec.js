@@ -39,7 +39,7 @@ moduleLoader.imports("ec", ['events'], function (events) {
 
   var createEntity = function (prototype) {
 
-    var entityInstance = Object.create(prototype || null).extend(events);
+    var entityInstance = Object.create(prototype || {}).extend(events);
 
     entityInstance.addComponent = addComponent;
     entityInstance.removeComponent = removeComponent;

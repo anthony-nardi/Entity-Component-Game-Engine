@@ -47,6 +47,7 @@ moduleLoader.imports('mainView', ['viewport','ec'], function (viewport, ec) {
     
     if (event.target.id === mainView.canvasId) {
       state.moving = false;
+      mainView.off('render', render);
     }
   
   }
