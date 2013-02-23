@@ -100,7 +100,7 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
     var c = canvas.getCanvas(e.target.id);
 
     if (this === c.element) {
-      
+
       c.setLastPointerPosition(c.getCurrentPointerPosition());
       c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
             

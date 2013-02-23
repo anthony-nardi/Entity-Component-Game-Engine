@@ -107,10 +107,10 @@ moduleLoader.imports('mainView', ['viewport','ec'], function (viewport, ec) {
         deltaWidth = 0, deltaHeight = 0;
 
       state['zooming'] === 1   ? 
-        mainView.zoom    <   4   ? mainView.zoom    +=  .01 : mainView.zoom    =   4   : 
+        mainView.zoom    <   4   ? mainView.zoom    +=  .1 : mainView.zoom    =   4   : 
         mainView.zoom    <=  .25 ? 
           mainView.zoom    =   .25 : 
-          mainView.zoom    -=  .01;
+          mainView.zoom    -=  .1;
       
       state['zooming'] =   0;
 
