@@ -2,7 +2,8 @@ moduleLoader.imports('mainView', ['viewport','ec'], function (viewport, ec) {
 
   var mainView = ec(viewport),  //inherit from (viewport <- grid <- canvas)
       handle   = mainView.handle,
-      state    = mainView.state;
+      state    = mainView.state,
+      render   = state.render = true;
 
   mainView.initializeCanvas({    
     
@@ -38,7 +39,6 @@ moduleLoader.imports('mainView', ['viewport','ec'], function (viewport, ec) {
 
     if (event.target.id === mainView.canvasId) {
       state.moving = true;
-      mainView.on('render', render);
     }
 
   };
@@ -47,14 +47,12 @@ moduleLoader.imports('mainView', ['viewport','ec'], function (viewport, ec) {
     
     if (event.target.id === mainView.canvasId) {
       state.moving = false;
-      mainView.off('render', render);
     }
   
   }
 
   handle['mousewheel'] = function (event) {
     event.wheelDelta > 0 ? state.zooming = -1 : state.zooming = 1;
-    mainView.on('render', render);
   }
 
   handle['click'] = function (event) {
@@ -69,31 +67,41 @@ moduleLoader.imports('mainView', ['viewport','ec'], function (viewport, ec) {
         height        = canvasElement.height;
 
     return function () {
-
-      var tileOffsetX   = this.tileOffsetX(),
-          tileOffsetY   = this.tileOffsetY(),
-          tileRowCount  = this.tileRowCount(),
-          tileColCount  = this.tileColCount();
-
-      ctx.fillStyle = '#E093FF';
-      ctx.fillRect(0, 0, width, height);
-      ctx.strokeStyle = '#EEEf00';
       
-      for (var x = tileOffsetX < 0 ? 0 : tileOffsetX; x < tileRowCount + 1; x += 1) {
-        for (var y = tileOffsetY < 0 ? 0 : tileOffsetY; y < tileColCount + 1; y += 1) {
-          ctx.strokeRect(this.getTileWidth() * x - this.scroll.x, this.getTileHeight() * y - this.scroll.y, this.getTileWidth(), this.getTileHeight());
+      if (state.render) {
+       
+       var tileOffsetX   = this.tileOffsetX(),
+           tileOffsetY   = this.tileOffsetY(),
+           tileRowCount  = this.tileRowCount(),
+           tileColCount  = this.tileColCount();
+
+        ctx.fillStyle = '#E093FF';
+        ctx.fillRect(0, 0, width, height);
+        ctx.strokeStyle = '#EEEf00';
+        
+        for (var x = tileOffsetX < 0 ? 0 : tileOffsetX; x < tileRowCount + 1; x += 1) {
+          for (var y = tileOffsetY < 0 ? 0 : tileOffsetY; y < tileColCount + 1; y += 1) {
+            ctx.strokeRect(this.getTileWidth() * x - this.scroll.x, this.getTileHeight() * y - this.scroll.y, this.getTileWidth(), this.getTileHeight());
+          }
         }
+
       }
 
-      mainView.off('render', render);
+      render = false;
 
     };
 
   }());
   
   var update = function () {
-    if (state['moving']) move();
-    if (state['zooming']) zoom();
+    if (state['moving']) {
+      move();
+      render = true;
+    }
+    if (state['zooming']) {
+      zoom();
+      render = true;
+    }
   };  
   
   mainView.on('render', render);
