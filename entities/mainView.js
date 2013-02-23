@@ -1,4 +1,4 @@
-moduleLoader.imports('mainView', ['viewport','ec','events'], function (viewport, ec, events) {
+moduleLoader.imports('mainView', ['viewport','ec'], function (viewport, ec) {
 
   var mainView = ec(viewport),  //inherit from (viewport <- grid <- canvas)
       handle   = mainView.handle,
@@ -38,6 +38,7 @@ moduleLoader.imports('mainView', ['viewport','ec','events'], function (viewport,
 
     if (event.target.id === mainView.canvasId) {
       state.moving = true;
+      mainView.on('render', render);
     }
 
   };
@@ -52,12 +53,13 @@ moduleLoader.imports('mainView', ['viewport','ec','events'], function (viewport,
 
   handle['mousewheel'] = function (event) {
     event.wheelDelta > 0 ? state.zooming = -1 : state.zooming = 1;
+    mainView.on('render', render);
   }
 
   handle['click'] = function (event) {
     console.log(mainView.getClickedTile(event));
   };
-  
+ 
   var render = (function () {
     
     var canvasElement = mainView.getElement(),
@@ -81,9 +83,22 @@ moduleLoader.imports('mainView', ['viewport','ec','events'], function (viewport,
           ctx.strokeRect(this.getTileWidth() * x - this.scroll.x, this.getTileHeight() * y - this.scroll.y, this.getTileWidth(), this.getTileHeight());
         }
       }
+
+      mainView.off('render', render);
+
     };
 
   }());
+  
+  var update = function () {
+    if (state['moving']) move();
+    if (state['zooming']) zoom();
+  };  
+  
+  mainView.on('render', render);
+  mainView.on('update', update)
+
+
   
   var zoom = function () {  //instance
     
@@ -112,13 +127,6 @@ moduleLoader.imports('mainView', ['viewport','ec','events'], function (viewport,
     mainView.scroll.y -= (mainView.getCurrentPointerPosition().y - mainView.getLastPointerPosition().y);
     state.moving = false;
   };
-
-  mainView.update.push(function () {  //instance    
-    if (state['moving']) move();
-    if (state['zooming']) zoom();  
-  });
-  
-  mainView.render.push(render);
 
   return mainView;
 

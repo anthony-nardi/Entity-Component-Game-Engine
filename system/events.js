@@ -1,98 +1,96 @@
 moduleLoader.imports("events", [], function () {
 
-  var returnObject = {},
-      list = [];
-
-  var on = function (name, callback) {
+  var list = [],
   
-    if (typeof list[name] === "undefined") {
-    
-      if (this instanceof Node) {
+  isNode = function () {
+  
+    return this instanceof Node;
+  
+  },
 
-        this.addEventListener(name, fire);
+  addListener = function (context, type, callback) {
+    context instanceof Node ? 
+      context.addEventListener(type, callback) : window.addEventListener(type, callback);
+  },
 
+  removeListener = function (context, type, callback) {
+    context instanceof Node ? 
+      context.removeEventListener(type, callback) : window.removeEventListener(type, callback);
+  },
+
+  prototype = {
+
+    'on': function (type, callback) {
+      
+      if (list[type]) {
+
+        list[type].push([this, callback]);
+      
       } else {
-
-        window.addEventListener(name, fire);
+      
+        addListener(this, type, callback);
+        
+        list[type] = [];
+        list[type].push([this, callback]);
       
       }
-      
-      list.push(name);
-      list[name] = [];
-      list[name].push([this, callback]);
     
-    } else { list[name].push([this, callback]); }
+      return this;
+    
+    },
+    
+    'off': function (type, callback, opt) {
+    
+      var event = list[type];
 
-    return this;
-  };
-
-  var off = function (name, callback, opt) {
-
-    var event = list[name],
-        i = 0;
-
-    if (opt) { window.removeEventListener(name, fire); }
-
-    if (event.length) {
-
-      for (i; i < event.length; i += 1) {
-        if (event[i][0] === this && event[i][1] === callback) {
-          event.splice(i, 1);
-          i -= 1;
-        } 
+      if (opt) removeListener(this, type, callback);
+      
+      if (event.length) {
+        for (var i = 0; i < event.length; i += 1) {
+          if (event[i][0] === this && event[i][1] === callback) {
+            event.splice(i, 1);
+            i -= 1;
+            console.log('spliced:' + type);
+            console.log(event)
+          }
+        }
       }
     
-    }
-
-    return this;
-
-  };
-
-  var fire = function (e) {
-
-    var event = undefined,
-        data = undefined,
-        events = undefined,
-        current = undefined,
-        i = 0;
-
-    if (typeof e === "string") {
-
-      name = e;
-      data = arguments[1];
+      return this;
     
-    } else {
+    },
+
+    'fire': function (event) {
       
-      name = e.type;
-      data = e;
-     
-    }
+      var type = typeof event === "string" ?
+            event : event.type,
+          
+          data = typeof event === "string" ?
+            arguments[1] : event;
+          
+          listeners = list[type],
 
-    event = list[name];
+          listenersCount = listeners.length,
 
-    if (event && event.length) {
-       
-      events = event.length;
+          listener = undefined;
 
-      for (i; i < events; i += 1) {
-
-        current = event[i];
-        current[1].apply(current[0], [data]);
-       
+      if (listenersCount) {
+        for (var i = 0; i < listenersCount; i += 1) {
+          listener = listeners[i];
+          listener[1].call(listener[0], data);
+        }
       }
-    }
 
-    return this;
+      return this;       
+    
+    },
 
-  };
+    'list': list
 
-  returnObject = function(name, callback) { return on(name, callback) };
-  
-  returnObject.list = list;
-  returnObject.on = on;
-  returnObject.off = off;
-  returnObject.fire = fire;
+  },
 
-  return returnObject;
+  events = Object.create(prototype);
+
+  return events;
 
 });
