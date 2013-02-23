@@ -100,7 +100,7 @@ moduleLoader.imports("canvas", [], function () {
     },
 
     'setCurrentPointerPosition': function (coordinate) {
-console.log('coordinate')
+
       this.currentPointerPosition.x = coordinate.x;
       this.currentPointerPosition.y = coordinate.y;
 
