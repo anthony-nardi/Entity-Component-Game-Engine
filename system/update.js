@@ -1,14 +1,14 @@
 moduleLoader.imports("update", ["ec"], function (ec) {
 
-	var returnObject = {},
-			gameObjects = ec.list, 
+  var returnObject = {},
+      gameObjects = ec.list, 
       updates = 0;
     
   var update = function () {
 
     var i = 0, j = 0;
 
-  	for (i; i < gameObjects.length; i += 1) {
+    for (i; i < gameObjects.length; i += 1) {
       
       if (gameObjects[i]["update"].length) {
             
@@ -18,7 +18,7 @@ moduleLoader.imports("update", ["ec"], function (ec) {
             
         }
           
-	      updates = true;
+        updates = true;
 
       }
     
@@ -34,7 +34,7 @@ moduleLoader.imports("update", ["ec"], function (ec) {
     
     }
 
-	}
+  }
 
   returnObject = function () { return update() };
   returnObject.update = true;

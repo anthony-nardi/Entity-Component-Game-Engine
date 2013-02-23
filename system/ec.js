@@ -4,28 +4,28 @@ moduleLoader.imports("ec", [], function () {
       returnObject = {};
 
   var uid = (function () {
-	
+  
     var counter = 0;
 
     return function () {
 
       return counter++;
-	
-		};
+  
+    };
 
   }());
 
   var addComponent = function (component) {
 
-	for (property in component) {
+  for (property in component) {
 
     if (!component.hasOwnProperty(property)) continue;
-	
-	  this[property] = component[property];
+  
+    this[property] = component[property];
 
-	}
+  }
 
-	return this;
+  return this;
 
   };
 
@@ -33,30 +33,30 @@ moduleLoader.imports("ec", [], function () {
 
     for (property in component) {
 
-	 	  if (!component.hasOwnProperty(property) || !this.hasOwnProperty(property)) continue;
+       if (!component.hasOwnProperty(property) || !this.hasOwnProperty(property)) continue;
 
-	  delete this[property];
+    delete this[property];
 
-	}
+  }
 
-	return this;
+  return this;
 
   };
 
   var createEntity = function (prototype) {
 
-	  var entityInstance = Object.create(prototype || null);
+    var entityInstance = Object.create(prototype || null);
 
-	  entityInstance.addComponent = addComponent;
-	  entityInstance.removeComponent = removeComponent;
-	  entityInstance.update = [];
-	  entityInstance.render = [];
-	  entityInstance.entityId = uid();
-	  list[entityInstance.entityId] = entityInstance;
+    entityInstance.addComponent = addComponent;
+    entityInstance.removeComponent = removeComponent;
+    entityInstance.update = [];
+    entityInstance.render = [];
+    entityInstance.entityId = uid();
+    list[entityInstance.entityId] = entityInstance;
 
-	  return entityInstance;
+    return entityInstance;
 
-	};
+  };
 
   returnObject = function (prototype) { return createEntity(prototype) };
 

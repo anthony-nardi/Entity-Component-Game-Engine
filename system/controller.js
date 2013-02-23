@@ -11,7 +11,7 @@ moduleLoader.imports("controller",
 function() {
   
   var modules = moduleLoader.list, 
-  		modulesLength = moduleLoader.list.length, 
+      modulesLength = moduleLoader.list.length, 
   
   clock = modules.clock;
   

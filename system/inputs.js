@@ -2,163 +2,163 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
 
 /***************************************************************************************
 
-				This module registers important DOM event.  When input events are fired,
-				they are augmented and put into a list which represents the current 
-				state of inputs.  This list is then dispatched during each game loop.	
+        This module registers important DOM event.  When input events are fired,
+        they are augmented and put into a list which represents the current 
+        state of inputs.  This list is then dispatched during each game loop.  
 
 ***************************************************************************************/
-	var list = [],
+  var list = [],
 
-			returnObject,
+      returnObject,
 
-			inputMap = {
-				'UP' : 38,
-				'DOWN': 40,
-				'LEFT':37,
-				'RIGHT':39,
-				'PAUSE':80
-			};
+      inputMap = {
+        'UP' : 38,
+        'DOWN': 40,
+        'LEFT':37,
+        'RIGHT':39,
+        'PAUSE':80
+      };
 
-	var handleKeyDown = function (e) {
-			
-		list['keydown'] = [];
+  var handleKeyDown = function (e) {
+      
+    list['keydown'] = [];
 
-		switch(e.keyCode) {
-		
-					case inputMap.UP:
-						list['keydown']['UP'] = true;
-						break;
-				
-					case inputMap.DOWN:
-						list['keydown']['DOWN'] = true;
-						break;
-				
-					case inputMap.LEFT:
-						list['keydown']['LEFT'] = true;
-						break;
-				
-					case inputMap.RIGHT:
-						list['keydown']['RIGHT'] = true;
-						break;
-				
-					default:
-						break;
-				}
-	};
+    switch(e.keyCode) {
+    
+          case inputMap.UP:
+            list['keydown']['UP'] = true;
+            break;
+        
+          case inputMap.DOWN:
+            list['keydown']['DOWN'] = true;
+            break;
+        
+          case inputMap.LEFT:
+            list['keydown']['LEFT'] = true;
+            break;
+        
+          case inputMap.RIGHT:
+            list['keydown']['RIGHT'] = true;
+            break;
+        
+          default:
+            break;
+        }
+  };
 
-	var handleMouseClick = function (e) {
+  var handleMouseClick = function (e) {
 
-		var c = canvas.getCanvas(e.target.id);
-		
-		if (this === c.element) {
-		
-			c.setLastPointerPosition(c.getCurrentPointerPosition());
-			c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
-			
-		}
+    var c = canvas.getCanvas(e.target.id);
+    
+    if (this === c.element) {
+    
+      c.setLastPointerPosition(c.getCurrentPointerPosition());
+      c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
+      
+    }
 
-		list['click'] = e;
-		
-	};
+    list['click'] = e;
+    
+  };
 
-	var handleMouseUp = function (e) {
+  var handleMouseUp = function (e) {
 
-		var c = canvas.getCanvas(e.target.id);
+    var c = canvas.getCanvas(e.target.id);
 
-		if (this === c.element) {
-		
-			c.setLastPointerPosition(c.getCurrentPointerPosition());
-			c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
+    if (this === c.element) {
+    
+      c.setLastPointerPosition(c.getCurrentPointerPosition());
+      c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
 
-			events.off.call(c.element, 'mousemove', handleMouseMove);
+      events.off.call(c.element, 'mousemove', handleMouseMove);
 
-		}
-		
-		list['mouseup'] = e;
-	
-	};
-
-	var handleMouseDown = function (e) {
-
-		var c = canvas.getCanvas(e.target.id);
-
-		if (this === c.element) {
-
-			c.setLastPointerPosition(c.getCurrentPointerPosition());
-			c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
-			
-			events.on.call(c.element, 'mousemove', handleMouseMove);
-
-		}
-
-		list['mousedown'] = e;
-
-	};
-
-	var handleMouseMove = function (e) {
-
-		var c = canvas.getCanvas(e.target.id);
-
-		if (this === c.element) {
-			
-			c.setLastPointerPosition(c.getCurrentPointerPosition());
-			c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
-						
-		}
-
-		list['mousemove'] = e;
-
-	};
-
-	var handleScroll = function (e) {
-		
-		if (e.preventDefault) {
-	
-			e.preventDefault();
-	
-		}
-		
-		e.returnValue = false;
-		
-		list['mousewheel'] = e;
-
-	};
-
-	var dispatch = function () {
+    }
+    
+    list['mouseup'] = e;
   
-	  if (Object.keys(list).length) {
+  };
 
-		  events.fire('inputs', list);
+  var handleMouseDown = function (e) {
 
-		}
-	
-	};
+    var c = canvas.getCanvas(e.target.id);
 
-	var clear = function () {
-		list = [];
-	};
+    if (this === c.element) {
 
-	var registerCanvas = function (id) {
+      c.setLastPointerPosition(c.getCurrentPointerPosition());
+      c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
+      
+      events.on.call(c.element, 'mousemove', handleMouseMove);
 
-		var canvasElement = canvas.getElement(id);
-		
-		events.on.call(canvasElement, 'click', handleMouseClick);
-		events.on.call(canvasElement, 'mouseup', handleMouseUp);
-		events.on.call(canvasElement, 'mousedown', handleMouseDown);
-	
-	};
+    }
 
-	returnObject 				        = function () { return dispatch() };
-	returnObject.clear 	        = function () { clear() };
-	returnObject.registerCanvas = function (id) { return registerCanvas(id) };
-	returnObject.dispatch       = function () { dispatch() };
-	
-	events.on('keydown', handleKeyDown);
+    list['mousedown'] = e;
 
-	events.on.call(window, 'mousewheel', handleScroll);
+  };
 
-	returnObject.list   = list;
-	
-	return returnObject;
+  var handleMouseMove = function (e) {
+
+    var c = canvas.getCanvas(e.target.id);
+
+    if (this === c.element) {
+      
+      c.setLastPointerPosition(c.getCurrentPointerPosition());
+      c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
+            
+    }
+
+    list['mousemove'] = e;
+
+  };
+
+  var handleScroll = function (e) {
+    
+    if (e.preventDefault) {
+  
+      e.preventDefault();
+  
+    }
+    
+    e.returnValue = false;
+    
+    list['mousewheel'] = e;
+
+  };
+
+  var dispatch = function () {
+  
+    if (Object.keys(list).length) {
+
+      events.fire('inputs', list);
+
+    }
+  
+  };
+
+  var clear = function () {
+    list = [];
+  };
+
+  var registerCanvas = function (id) {
+
+    var canvasElement = canvas.getElement(id);
+    
+    events.on.call(canvasElement, 'click', handleMouseClick);
+    events.on.call(canvasElement, 'mouseup', handleMouseUp);
+    events.on.call(canvasElement, 'mousedown', handleMouseDown);
+  
+  };
+
+  returnObject                 = function () { return dispatch() };
+  returnObject.clear           = function () { clear() };
+  returnObject.registerCanvas = function (id) { return registerCanvas(id) };
+  returnObject.dispatch       = function () { dispatch() };
+  
+  events.on('keydown', handleKeyDown);
+
+  events.on.call(window, 'mousewheel', handleScroll);
+
+  returnObject.list   = list;
+  
+  return returnObject;
 
 });
