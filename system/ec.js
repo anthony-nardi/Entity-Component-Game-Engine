@@ -1,4 +1,4 @@
-moduleLoader.imports("ec", [], function () {
+moduleLoader.imports("ec", ['events'], function (events) {
 
   var list = [],
       returnObject = {};
@@ -45,7 +45,7 @@ moduleLoader.imports("ec", [], function () {
 
   var createEntity = function (prototype) {
 
-    var entityInstance = Object.create(prototype || null);
+    var entityInstance = Object.create(prototype || {}).extend(events);
 
     entityInstance.addComponent = addComponent;
     entityInstance.removeComponent = removeComponent;
