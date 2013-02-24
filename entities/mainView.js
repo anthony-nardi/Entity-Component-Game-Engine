@@ -56,7 +56,7 @@ moduleLoader.imports('mainView', ['viewport','ec'], function (viewport, ec) {
   }
 
   handle['click'] = function (event) {
-    console.log(mainView.getClickedTile(event));
+  //  console.log(mainView.getClickedTile(event));
   };
  
   var render = (function () {

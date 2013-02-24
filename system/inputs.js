@@ -148,10 +148,29 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
   
   };
 
+  var inputs = function (object) {
+    
+    events.on.call(object, 'inputs', function (eventList) {
+    
+      for (event in eventList) {
+        
+          if (!eventList.hasOwnProperty(event) || !this.handle[event]) continue;
+          
+          this.handle[event].call(this, eventList[event]);
+        
+        }
+    
+    });
+
+    return this;
+  
+  };
+
   returnObject                 = function () { return dispatch() };
   returnObject.clear           = function () { clear() };
   returnObject.registerCanvas = function (id) { return registerCanvas(id) };
   returnObject.dispatch       = function () { dispatch() };
+  returnObject.inputs = function (object) { return inputs(object) };
   
   events.on('keydown', handleKeyDown);
 

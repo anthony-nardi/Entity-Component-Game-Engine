@@ -24,13 +24,11 @@ moduleLoader.imports('clock', ['inputs', 'events', 'fps'], function (inputs, eve
     inputs();
 
     while (dtBuffer >= SIM_RES) {
-      //update(SIM_RES);
       events.fire('update');
       dtBuffer -= SIM_RES;
     }
     
     renderOpsPerSec.start();
-    //render();
     events.fire('render');
     renderOpsPerSec.end();
     inputs.clear();

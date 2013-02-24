@@ -35,7 +35,7 @@ moduleLoader.imports("events", [], function () {
       
       for (var i = 0; i < event.length; i += 1) {
         if (event[i][0] === this && event[i][1] === callback) {
-          event.splice(i, 1);
+          event.splice(i, 1);   
           i -= 1;
         }
       }
