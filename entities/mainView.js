@@ -29,8 +29,8 @@ moduleLoader.imports('mainView', ['viewport','ec'], function (viewport, ec) {
     'height':20,
     
     'tile': {
-      'width':25,
-      'height':25
+      'width':100,
+      'height':100
     }
   
   });
@@ -73,7 +73,9 @@ moduleLoader.imports('mainView', ['viewport','ec'], function (viewport, ec) {
        var tileOffsetX   = this.tileOffsetX(),
            tileOffsetY   = this.tileOffsetY(),
            tileRowCount  = this.tileRowCount(),
-           tileColCount  = this.tileColCount();
+           tileColCount  = this.tileColCount(),
+           tileWidth     = this.getTileWidth(),
+           tileHeight    = this.getTileHeight();
 
         ctx.fillStyle = '#E093FF';
         ctx.fillRect(0, 0, width, height);
@@ -82,10 +84,10 @@ moduleLoader.imports('mainView', ['viewport','ec'], function (viewport, ec) {
         for (var x = tileOffsetX < 0 ? 0 : tileOffsetX; x < tileRowCount + 1; x += 1) {
           for (var y = tileOffsetY < 0 ? 0 : tileOffsetY; y < tileColCount + 1; y += 1) {
             ctx.strokeRect(
-              this.getTileWidth() * x - this.scroll.x, 
-              this.getTileHeight() * y - this.scroll.y, 
-              this.getTileWidth(), 
-              this.getTileHeight()
+              tileWidth * x - this.scroll.x, 
+              tileHeight * y - this.scroll.y, 
+              tileWidth, 
+              tileHeight
             );
           }
         }

@@ -4,7 +4,7 @@ moduleLoader.imports('viewport', ['grid'], function (grid) {
    
   prototype.extend({
      
-     'state': {      
+    'state': {      
       'zooming' : 0,    
       'moving'  : false    
     },
@@ -63,19 +63,7 @@ moduleLoader.imports('viewport', ['grid'], function (grid) {
       };
     
     },
-    
-    'getScrollX': function () {
-      
-      return this.scroll.x + this.getTileWidth() * this.getWidth() / 2;
-  
-    },
-    
-    'getScrollY' : function () {
-    
-      return this.scroll.y + this.getTileHeight() * this.getTileHeight / 2;
-  
-    },
-    
+        
     'maxTilesInView' : function () {
     
       return this.maxTilesInRow() * this.maxTilesInCol();

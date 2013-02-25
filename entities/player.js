@@ -7,10 +7,10 @@ moduleLoader.imports('player', ['unit', 'ec', 'mainView'], function (unit, ec, m
       'y': 0
     },
     
-    'height': 20,
-    'width' : 20,
+    'height': 100,
+    'width' : 100,
     'color' : '#000000',
-    'speed' : 1.2,
+    'speed' : 1,
     'state' : {
       'moving': false,
       'render': true
@@ -34,12 +34,14 @@ moduleLoader.imports('player', ['unit', 'ec', 'mainView'], function (unit, ec, m
 
   var move = function (event) {
 
-    this.moveTo.x = mainView.getCurrentPointerPosition().x + mainView.scroll.x;
-    this.moveTo.y = mainView.getCurrentPointerPosition().y + mainView.scroll.y;
+    this.moveTo.x = (mainView.getCurrentPointerPosition().x 
+                  + mainView.scroll.x) / mainView.zoom;
+    this.moveTo.y = (mainView.getCurrentPointerPosition().y 
+                  + mainView.scroll.y) / mainView.zoom;
 
     this.vector(this.position.x - this.moveTo.x, this.position.y - this.moveTo.y);
     this.normalize();
-    this.scale(this.speed * mainView.zoom);
+    this.scale(this.speed);
 
     if (this.position.x === this.moveTo.x 
     && this.position.y === this.moveTo.y) {
@@ -85,8 +87,8 @@ moduleLoader.imports('player', ['unit', 'ec', 'mainView'], function (unit, ec, m
       ctx.fillStyle = this.color;
       
       ctx.fillRect(
-        this.position.x - mainView.scroll.x, 
-        this.position.y - mainView.scroll.y, 
+        this.position.x * mainView.zoom - mainView.scroll.x, 
+        this.position.y * mainView.zoom - mainView.scroll.y, 
         this.width * mainView.zoom, 
         this.height * mainView.zoom
       );
