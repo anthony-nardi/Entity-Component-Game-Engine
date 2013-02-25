@@ -1,98 +1,81 @@
 moduleLoader.imports("events", [], function () {
 
-  var returnObject = {},
-      list = [];
-
-  var on = function (name, callback) {
+  var list = [],
   
-    if (typeof list[name] === "undefined") {
-    
-      if (this instanceof Node) {
-
-        this.addEventListener(name, fire);
-
-      } else {
-
-        window.addEventListener(name, fire);
+  on = function (type, callback) {
       
-      }
-      
-      list.push(name);
-      list[name] = [];
-      list[name].push([this, callback]);
-    
-    } else { list[name].push([this, callback]); }
+    if (list[type]) {
 
-    return this;
-  };
-
-  var off = function (name, callback, opt) {
-
-    var event = list[name],
-        i = 0;
-
-    if (opt) { window.removeEventListener(name, fire); }
-
-    if (event.length) {
-
-      for (i; i < event.length; i += 1) {
-        if (event[i][0] === this && event[i][1] === callback) {
-          event.splice(i, 1);
-          i -= 1;
-        } 
-      }
-    
-    }
-
-    return this;
-
-  };
-
-  var fire = function (e) {
-
-    var event = undefined,
-        data = undefined,
-        events = undefined,
-        current = undefined,
-        i = 0;
-
-    if (typeof e === "string") {
-
-      name = e;
-      data = arguments[1];
+      list[type].push([this, callback]);
     
     } else {
-      
-      name = e.type;
-      data = e;
-     
+    
+      if (this instanceof Node) {
+        this.addEventListener(type, fire);
+      } else {
+        window.addEventListener(type, fire);
+      }
+
+      list[type] = [];
+      list[type].push([this, callback]);
+    
     }
+  
+    return this;
+  
+  },
 
-    event = list[name];
+  off = function (type, callback, opt) {
+  
+    var event = list[type];
 
-    if (event && event.length) {
-       
-      events = event.length;
+    if (opt) window.removeEventListener(name, fire);
+    
+    if (event.length) {
+      
+      for (var i = 0; i < event.length; i += 1) {
+        if (event[i][0] === this && event[i][1] === callback) {
+          event.splice(i, 1);   
+          i -= 1;
+        }
+      }
+    
+    }
+  
+    return this;
+  
+  },
 
-      for (i; i < events; i += 1) {
+  fire = function (event) {
+      
+    var type = typeof event === "string" ?
+          event : event.type,
+        
+        data = typeof event === "string" ?
+          arguments[1] : event;
+        
+        listeners = list[type],
 
-        current = event[i];
-        current[1].apply(current[0], [data]);
-       
+        listener = undefined;
+
+     //   if (event === 'render') console.log(listeners.length)
+    if (listeners.length) {
+      for (var i = 0; i < listeners.length; i += 1) {
+        listener = listeners[i];
+        listener[1].call(listener[0], data);
       }
     }
 
-    return this;
-
-  };
-
-  returnObject = function(name, callback) { return on(name, callback) };
+    return this;       
   
-  returnObject.list = list;
-  returnObject.on = on;
-  returnObject.off = off;
-  returnObject.fire = fire;
+  },
 
-  return returnObject;
+  events = Object.create({
+    'on'  : on,
+    'off' : off,
+    'fire': fire
+  });
+
+  return events;
 
 });

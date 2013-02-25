@@ -7,13 +7,26 @@
 		<link href="styles.css" rel="stylesheet" type="text/css"/>
 		<script src="system/game.js"></script>
 		<script>
-            moduleLoader(['components','entities','system'])(['extend','clock','ec','events','render','update','canvas', 'grid','inputs','viewport','fps','mainView','player','controller']);
-		</script>
+
+		if (!Object.prototype.extend) {
+		  Object.prototype.extend = function (object) {
+		    for (key in object) {
+		      if (typeof object[key] === 'object' && typeof this[key] === 'object') {
+		        this[key].extend(object[key]);
+		      } else {
+		        this[key] = object[key];
+		      }
+		    }
+		    return this;
+		  };
+		}
+    moduleLoader(['components','entities','system'])(['extend','vector','clock','events','canvas', 'grid','inputs','viewport','fps','mainView','unit','player', 'ec','controller']);
+
+    </script>
 	</head>
 
 	<body>
 		<div id="container" style="margin:auto;height:480px;width:640px;display:block;">
- 		<!--canvas id="stage" width="640" height="480" style="border:1px solid;margin:auto;display:block;"></canvas-->
  	</div>
 	</body>	
 
