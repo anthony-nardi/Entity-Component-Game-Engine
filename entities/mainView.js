@@ -81,7 +81,12 @@ moduleLoader.imports('mainView', ['viewport','ec'], function (viewport, ec) {
         
         for (var x = tileOffsetX < 0 ? 0 : tileOffsetX; x < tileRowCount + 1; x += 1) {
           for (var y = tileOffsetY < 0 ? 0 : tileOffsetY; y < tileColCount + 1; y += 1) {
-            ctx.strokeRect(this.getTileWidth() * x - this.scroll.x, this.getTileHeight() * y - this.scroll.y, this.getTileWidth(), this.getTileHeight());
+            ctx.strokeRect(
+              this.getTileWidth() * x - this.scroll.x, 
+              this.getTileHeight() * y - this.scroll.y, 
+              this.getTileWidth(), 
+              this.getTileHeight()
+            );
           }
         }
 
