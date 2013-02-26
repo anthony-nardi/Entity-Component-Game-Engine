@@ -15,8 +15,8 @@
         for (key in object) {
     
           if (typeof object[key] === 'object' 
-             && typeof this[key] === 'object'){
-             //&& this.hasOwnProperty(key)) {
+             && typeof this[key] === 'object'
+             && this.hasOwnProperty(key)) {
             
             this[key].extend(object[key]);
           
