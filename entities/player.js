@@ -1,5 +1,5 @@
 moduleLoader.imports('player', ['unit', 'ec', 'mainView'], function (unit, ec, mainView) {
-console.log(moduleLoader.list.unit.position.x)
+
   var player = ec(unit).extend({
     
     'position': {
@@ -31,7 +31,7 @@ console.log(moduleLoader.list.unit.position.x)
     }
   
   })
-console.log(moduleLoader.list.unit.position.x)
+
   var move = function (event) {
 
     this.moveTo.x = (mainView.getCurrentPointerPosition().x 
@@ -74,8 +74,7 @@ console.log(moduleLoader.list.unit.position.x)
   
   player.on('update', function () {
     if (this.state.moving) {
-      console.log('hey')
-     //move.call(this);
+      move.call(this);
     }
   });
 
