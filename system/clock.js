@@ -28,9 +28,9 @@ moduleLoader.imports('clock', ['inputs', 'events', 'fps'], function (inputs, eve
       dtBuffer -= SIM_RES;
     }
     
-   // renderOpsPerSec.start();
+    renderOpsPerSec.start();
     events.fire('render');
-   // renderOpsPerSec.end();
+    renderOpsPerSec.end();
     inputs.clear();
     last = now;
 

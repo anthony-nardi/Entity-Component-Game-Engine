@@ -7,6 +7,11 @@
     <link href="styles.css" rel="stylesheet" type="text/css"/>
     <script src="system/game.js"></script>
     <script>
+    if (!Math.getRandomInt) {
+      Math.getRandomInt = function (min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+    }
 
     if (!Object.prototype.extend) {
     
@@ -32,7 +37,7 @@
       };
     
     }
-    moduleLoader(['components','entities','system'])(['extend','vector','clock','events','canvas', 'grid','inputs','viewport','fps','mainView','unit','player', 'ec','controller']);
+    moduleLoader(['components','entities','system'])(['extend','vector','clock','events','canvas', 'grid','inputs','viewport','movers', 'fps','mainView','unit','player', 'ec','controller']);
 
     </script>
   </head>
