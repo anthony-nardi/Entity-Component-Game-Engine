@@ -20,7 +20,7 @@ moduleLoader.imports('unit', ['inputs', 'events', 'vector'], function (inputs, e
   }.extend(events).extend(vector);
   
   var unit = Object.create(prototype);
-  
+  console.log(unit.position.x)
   return unit;
 
 });

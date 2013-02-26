@@ -1,5 +1,5 @@
 moduleLoader.imports('player', ['unit', 'ec', 'mainView'], function (unit, ec, mainView) {
-
+console.log(moduleLoader.list.unit.position.x)
   var player = ec(unit).extend({
     
     'position': {
@@ -10,7 +10,7 @@ moduleLoader.imports('player', ['unit', 'ec', 'mainView'], function (unit, ec, m
     'height': 100,
     'width' : 100,
     'color' : '#000000',
-    'speed' : 1,
+    'speed' : 3,
     'state' : {
       'moving': false,
       'render': true
@@ -31,7 +31,7 @@ moduleLoader.imports('player', ['unit', 'ec', 'mainView'], function (unit, ec, m
     }
   
   })
-
+console.log(moduleLoader.list.unit.position.x)
   var move = function (event) {
 
     this.moveTo.x = (mainView.getCurrentPointerPosition().x 
@@ -74,14 +74,15 @@ moduleLoader.imports('player', ['unit', 'ec', 'mainView'], function (unit, ec, m
   
   player.on('update', function () {
     if (this.state.moving) {
-      move.call(this);
+      console.log('hey')
+     //move.call(this);
     }
   });
 
   player.on('render', function () {
 
     if (this.state.render) {
-      
+
       var ctx = mainView.getContext();
       
       ctx.fillStyle = this.color;
