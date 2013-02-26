@@ -82,8 +82,13 @@ moduleLoader.imports("canvas", [], function () {
       }
 
       if (config.width && config.height) {
-        canvasElement.width = config.width.split('px')[0] * 1;
-        canvasElement.height = config.height.split('px')[0] * 1;
+        if (config.width.indexOf('%') > -1) {
+          canvasElement.width  = canvasElement.offsetWidth;
+          canvasElement.height = canvasElement.offsetHeight;
+        } else {
+          canvasElement.width  = config.width.split('px')[0] * 1;
+          canvasElement.height = config.height.split('px')[0] * 1;
+        }
       }
       
       return this;

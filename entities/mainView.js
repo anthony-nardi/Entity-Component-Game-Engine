@@ -13,8 +13,8 @@ moduleLoader.imports('mainView', ['viewport','ec'], function (viewport, ec) {
     
     'style': {
       
-      'width':'640px',
-      'height':'480px',
+      'width':'100%',
+      'height':'100%',
       'margin':'auto',
       'border':'1px solid black',
       'display':'block'
