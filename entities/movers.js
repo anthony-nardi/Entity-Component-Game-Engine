@@ -11,6 +11,8 @@ moduleLoader.imports('movers', ['unit', 'ec', 'mainView'], function (unit, ec, m
       
       this.moveTo.x = Math.getRandomInt(1, 2000);
     	this.moveTo.y = Math.getRandomInt(1, 2000);
+    	this.height *= .9;
+    	this.width *= .9;
       return;      
     
     }
@@ -52,7 +54,7 @@ moduleLoader.imports('movers', ['unit', 'ec', 'mainView'], function (unit, ec, m
     }
 	});
 	var dm = 0;
-	for (var i = 0; i < 1000; i += 1) {
+	for (var i = 0; i < 3000; i += 1) {
 		dm = Math.getRandomInt(25, 100);
 		ec(movers).extend({
 			'position': {
