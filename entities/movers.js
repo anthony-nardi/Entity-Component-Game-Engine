@@ -1,4 +1,4 @@
-moduleLoader.imports('movers', ['unit', 'ec', 'mainView'], function (unit, ec, mainView) {
+moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
 
 	var move = function (event) {
 
@@ -54,9 +54,9 @@ moduleLoader.imports('movers', ['unit', 'ec', 'mainView'], function (unit, ec, m
     }
 	});
 	var dm = 0;
-	for (var i = 0; i < 3000; i += 1) {
+	for (var i = 0; i <3000; i += 1) {
 		dm = Math.getRandomInt(25, 100);
-		ec(movers).extend({
+		Object.create(movers).extend({
 			'position': {
 				'x': Math.getRandomInt(1, 2000),
 				'y': Math.getRandomInt(1, 2000)
@@ -76,6 +76,7 @@ moduleLoader.imports('movers', ['unit', 'ec', 'mainView'], function (unit, ec, m
 		}).on('update', function () {
 			if (this.state.moving) {
 				move.call(this);
+				mainView.state.render = true;
 			}
 		}).on('render', function () {
 			if (this.state.render) {

@@ -19,9 +19,9 @@ moduleLoader.imports('viewport', ['grid'], function (grid) {
     },
 
     'getClickedTile': function (event) {
-      
+     
       var coordinates = this.translateEventToPointerPosition(event);
-      
+     
       return {
         'x': Math.floor((coordinates.x + this.scroll.x) / this.getTileWidth()),
         'y': Math.floor((coordinates.y + this.scroll.y) / this.getTileHeight())
@@ -29,15 +29,51 @@ moduleLoader.imports('viewport', ['grid'], function (grid) {
     
     },
 
+    'getTile': function (x, y) { //gets the tile of coordinate pair
+    
+      return {
+        'x': Math.floor((x) / this.tile.width),
+        'y': Math.floor((y) / this.tile.height)
+      }
+    
+    },
+
+    'getTouchedTiles': function (object) {
+      
+      var x = object.position.x,
+          y = object.position.y,
+          w = object.width,
+          h = object.height,
+          topleft = this.getTile(x - w / 2, y - h / 2),
+          topright = this.getTile(x + w / 2, y + h / 2),
+          botleft = this.getTile(x - w / 2, y + h / 2),
+          botright = this.getTile(x + w / 2, y - h / 2);
+      
+      return {
+        'topleft': topleft,
+        'topright': topright,
+        'botleft': botleft,
+        'botright': botright
+      };
+
+    },
+
+    'getTileContents': function (x, y) {
+      if (this.tileMap[x] && this.tileMap[x][y]) {
+        return this.tileMap[x][y];
+      }
+      return false    
+    },
+
     'getTileWidth': function () {
 
-      return this.tile.width * this.zoom;
+      return Math.round(this.tile.width * this.zoom);
     
     },
     
     'getTileHeight': function () {
     
-      return this.tile.height * this.zoom;
+      return Math.round(this.tile.height * this.zoom);
     
     },
     

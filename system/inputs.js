@@ -70,8 +70,6 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
       c.setLastPointerPosition(c.getCurrentPointerPosition());
       c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
 
-      events.off.call(c.element, 'mousemove', handleMouseMove);
-
     }
     
     list['mouseup'] = e;
@@ -86,8 +84,6 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
 
       c.setLastPointerPosition(c.getCurrentPointerPosition());
       c.setCurrentPointerPosition(c.translateEventToPointerPosition(e));
-      
-      events.on.call(c.element, 'mousemove', handleMouseMove);
 
     }
 
@@ -145,6 +141,7 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
     events.on.call(canvasElement, 'click', handleMouseClick);
     events.on.call(canvasElement, 'mouseup', handleMouseUp);
     events.on.call(canvasElement, 'mousedown', handleMouseDown);
+    events.on.call(canvasElement, 'mousemove', handleMouseMove);
   
   };
 

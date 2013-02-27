@@ -58,7 +58,6 @@ moduleLoader.imports("events", [], function () {
 
         listener = undefined;
 
-     //   if (event === 'render') console.log(listeners.length)
     if (listeners.length) {
       for (var i = 0; i < listeners.length; i += 1) {
         listener = listeners[i];
