@@ -86,7 +86,6 @@ moduleLoader.imports('player', ['unit', 'mainView'], function (unit, mainView) {
     }
 
     newTile = mainView.getTile(this.position.x, this.position.y);
-    mainView.outline = [];
     touchedTiles = mainView.getTouchedTiles(this);
     
     for (var tile in touchedTiles) {

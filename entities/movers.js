@@ -54,7 +54,7 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
     }
 	});
 	var dm = 0;
-	for (var i = 0; i <3000; i += 1) {
+	for (var i = 0; i < 1000; i += 1) {
 		dm = Math.getRandomInt(25, 100);
 		Object.create(movers).extend({
 			'position': {

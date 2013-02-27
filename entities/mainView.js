@@ -88,9 +88,19 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
   });
 
   handle['mousemove'] = function (event) {
-
+    
+    var tile = undefined;
+    
     if (event.target.id === mainView.canvasId && event.which) {
       state.moving = true;
+      state.render = true;
+    } else {
+      mainView.outline.push(
+        mainView.getTile(
+          (mainView.getCurrentPointerPosition().x + mainView.scroll.x) / mainView.zoom,
+          (mainView.getCurrentPointerPosition().y + mainView.scroll.y) / mainView.zoom
+        )
+      );
       state.render = true;
     }
 
@@ -149,6 +159,7 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
           }
         }
         this.outlineTiles(tileWidth, tileHeight, scrollX, scrollY);
+        this.outline = []
       }
 
       state.render = false;
