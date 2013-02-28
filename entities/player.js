@@ -10,6 +10,7 @@ moduleLoader.imports('player', ['unit', 'mainView'], function (unit, mainView) {
     'height': 100,
     'width' : 100,
     'color' : '#000000',
+    'alpha' : .2,
     'speed' : 3,
     'state' : {
       'moving': false,
@@ -19,6 +20,7 @@ moduleLoader.imports('player', ['unit', 'mainView'], function (unit, mainView) {
       'x': 0,
       'y': 0
     },
+    'ctx': mainView.getContext(),
 
     'handle': {
 
@@ -34,6 +36,8 @@ moduleLoader.imports('player', ['unit', 'mainView'], function (unit, mainView) {
     }
   
   });
+
+  var render = player.state.render;
 
   mainView.place(player); //puts player in the grid
 
@@ -78,7 +82,7 @@ moduleLoader.imports('player', ['unit', 'mainView'], function (unit, mainView) {
     }
 
     newTile = mainView.getTile(this.position.x, this.position.y);
-    /*
+    /*]
     touchedTiles = mainView.getTouchedTiles(this);
     
     for (var tile in touchedTiles) {
@@ -99,17 +103,15 @@ moduleLoader.imports('player', ['unit', 'mainView'], function (unit, mainView) {
   player.on('update', function () {
     if (this.state.moving) {
       move.call(this);
-      mainView.state.render = true;
     }
   });
 
   player.on('render', function () {
 
-    if (this.state.render) {
-      
-      var ctx = mainView.getContext();
-      
-      ctx.fillStyle = this.color;
+    if (render) {
+      var ctx = this.ctx;
+      ctx.globalAlpha = this.alpha;
+      ctx.fillStyle = 'black'
       
       ctx.fillRect(
         this.position.x * mainView.zoom - mainView.scroll.x - (this.getWidth() * mainView.zoom) / 2, 
@@ -117,6 +119,7 @@ moduleLoader.imports('player', ['unit', 'mainView'], function (unit, mainView) {
         this.width * mainView.zoom, 
         this.height * mainView.zoom
       );
+      ctx.globalAlpha = 1;
     }
 
   });

@@ -34,11 +34,6 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
     }
   
   }).extend({
-    
-    'render': function (object, callback) {
-      object.on('render', callback);
-      return object;
-    },
   
     'radius': 100,
   
@@ -48,7 +43,10 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
         ctx.lineWidth = 4 * this.zoom;
         ctx.strokeStyle = '#49E20E';
         ctx.stroke();
-    }
+    },
+
+    'alpha': 1
+
   });
 
   var canvasElement = mainView.getElement(),
@@ -58,12 +56,12 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
 
   handle['mousemove'] = function (event) {
     
-    var tile = undefined;
-    
-    if (event.target.id === mainView.canvasId && event.which) {
+    if (event.target.id === mainView.canvasId && event.which === 1) {
       state.moving = true;
-      state.render = true;
     } 
+    if (event.target.id === mainView.canvasId) {
+      state.render = true;
+    }
 
   };
 
@@ -117,10 +115,10 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
       }
       
       this.drawCircleOnPoint(this.getCurrentPointerPosition());
-    
+
     }
 
-    state.render = false;
+    render = false;
 
   };
   
