@@ -1,9 +1,9 @@
 moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, events) {
 
-  var mainView = Object.create(viewport).extend(events),  //inherit from (viewport <- grid <- canvas)
-      handle   = mainView.handle,
-      state    = mainView.state,
-      render   = state.render = true;
+  var mainView      = Object.create(viewport).extend(events),
+      handle        = mainView.handle,
+      state         = mainView.state,
+      render        = state.render = true;
 
   mainView.initializeCanvas({    
     
@@ -35,57 +35,26 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
   
   }).extend({
     
-    'place': function (object, coordinates) { //put object in tile
-
-      var x = coordinates ? coordinates.x
-                          : this.getTile(object.position.x, object.position.y).x,
-          y = coordinates ? coordinates.y
-                          : this.getTile(object.position.x, object.position.y).y;
-
-      if (mainView.tileMap[x] && mainView.tileMap[y]) {
-        mainView.tileMap[x][y].push(object);
-      }
-      
-      return this;
-
+    'render': function (object, callback) {
+      object.on('render', callback);
+      return object;
     },
-    
-    'remove': function (object, coordinates) { //remove object in tile
-   
-      var x = coordinates ? coordinates.x
-                         : this.getTile(object.position.x, object.position.y).x,
-          y = coordinates ? coordinates.y
-                         : this.getTile(object.position.x, object.position.y).y;
-
-      if (mainView.tileMap[x] && mainView.tileMap[y]) {
-        mainView.tileMap[x][y].splice(mainView.tileMap[x][y].indexOf(object), 1);
-      }
-
-      return this;
-
-    },
-
-    'outline': [],
-    
-    'outlineTiles' : function (tileWidth, tileHeight, scrollX, scrollY) {
-      
-      var ctx = this.getContext();
-      
-      ctx.strokeStyle = '#000000';
-
-      if (this.outline.length) {
-        for (var i = 0; i < this.outline.length; i += 1) {
-          ctx.strokeRect(
-            tileWidth * this.outline[i].x - scrollX,
-            tileHeight * this.outline[i].y - scrollY, 
-            tileWidth, 
-            tileHeight
-          ); 
-        }
-      }
+  
+    'radius': 100,
+  
+    'drawCircleOnPoint': function (point) {
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, this.radius * this.zoom, 0, 2 * Math.PI, false);
+        ctx.lineWidth = 4 * this.zoom;
+        ctx.strokeStyle = '#49E20E';
+        ctx.stroke();
     }
-
   });
+
+  var canvasElement = mainView.getElement(),
+      ctx           = mainView.getContext(),
+      canvasWidth   = canvasElement.width,
+      canvasHeight  = canvasElement.height;
 
   handle['mousemove'] = function (event) {
     
@@ -94,15 +63,7 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
     if (event.target.id === mainView.canvasId && event.which) {
       state.moving = true;
       state.render = true;
-    } else {
-      mainView.outline.push(
-        mainView.getTile(
-          (mainView.getCurrentPointerPosition().x + mainView.scroll.x) / mainView.zoom,
-          (mainView.getCurrentPointerPosition().y + mainView.scroll.y) / mainView.zoom
-        )
-      );
-      state.render = true;
-    }
+    } 
 
   };
 
@@ -112,84 +73,73 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
       state.moving = false;
     }
   
-  }
+  };
 
   handle['mousewheel'] = function (event) {
-    event.wheelDelta > 0 ? state.zooming = -1 : state.zooming = 1;
+    
+    event.wheelDelta > 0 ? state.zooming = 1 : state.zooming = -1;
     state.render = true;
-  }
+  
+  };
 
   handle['click'] = function (event) {
   };
  
-  var render = (function () {
-    
-    var canvasElement = mainView.getElement(),
-        ctx           = mainView.getContext();
-        width         = canvasElement.width,
-        height        = canvasElement.height;
-
-    return function () {
+  var render = function () {
       
-      if (state.render) {
-       
-       var tileOffsetX   = this.tileOffsetX(),
-           tileOffsetY   = this.tileOffsetY(),
-           tileRowCount  = this.tileRowCount(),
-           tileColCount  = this.tileColCount(),
-           tileWidth     = this.getTileWidth(),
-           tileHeight    = this.getTileHeight(),
-           scrollX       = this.scroll.x,
-           scrollY       = this.scroll.y;
+    if (state.render) {
+     
+     var tileOffsetX   = this.tileOffsetX(),
+         tileOffsetY   = this.tileOffsetY(),
+         tileRowCount  = this.tileRowCount(),
+         tileColCount  = this.tileColCount(),
+         tileWidth     = this.getTileWidth(),
+         tileHeight    = this.getTileHeight(),
+         scrollX       = this.scroll.x,
+         scrollY       = this.scroll.y;
 
-        ctx.fillStyle = '#E093FF';
-        ctx.fillRect(0, 0, width, height);
-        ctx.strokeStyle = '#EEEf00';
-        
-        for (var x = tileOffsetX < 0 ? 0 : tileOffsetX; x < tileRowCount + 1; x += 1) {
-          for (var y = tileOffsetY < 0 ? 0 : tileOffsetY; y < tileColCount + 1; y += 1) {
-            if (this.tileMap[x] && this.tileMap[x][y]) {
-              ctx.strokeRect(
-                tileWidth * x - scrollX, 
-                tileHeight * y - scrollY, 
-                tileWidth, 
-                tileHeight
-              );
-            }
+      ctx.fillStyle = '#9A32CD';
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      ctx.strokeStyle = '#EEEf00';
+      ctx.lineWidth = 2 * this.zoom;
+      
+      for (var x = tileOffsetX < 0 ? 0 : tileOffsetX; x < tileRowCount + 1; x += 1) {
+        for (var y = tileOffsetY < 0 ? 0 : tileOffsetY; y < tileColCount + 1; y += 1) {
+          if (this.tileMap[x] && this.tileMap[x][y]) {
+            ctx.strokeRect(
+              tileWidth * x - scrollX, 
+              tileHeight * y - scrollY, 
+              tileWidth, 
+              tileHeight
+            );
           }
         }
-        this.outlineTiles(tileWidth, tileHeight, scrollX, scrollY);
-        this.outline = []
       }
+      
+      this.drawCircleOnPoint(this.getCurrentPointerPosition());
+    
+    }
 
-      state.render = false;
+    state.render = false;
 
-    };
-
-  }());
+  };
   
   var update = function () {
-    if (state['moving']) {
-      move();
-      state.render = true;
-    }
-    if (state['zooming']) {
-      zoom();
-      state.render = true;
-    }
+    if (state['moving']) move();
+    if (state['zooming']) zoom();
   };  
   
   mainView.on('render', render);
-  mainView.on('update', update)
+  mainView.on('update', update);
 
 
   
-  var zoom = function () {  //instance
+  var zoom = function () {
     
     var lastTileWidth = mainView.getTileWidth(),
         lastTileHeight = mainView.getTileHeight(),
-        tilesX = ((mainView.getElement().width / 2) + mainView.scroll.x) / mainView.getTileWidth(),
-        tilesY = ((mainView.getElement().height / 2) + mainView.scroll.y) / mainView.getTileHeight(),
+        tilesX = ((canvasWidth / 2) + mainView.scroll.x) / mainView.getTileWidth(),
+        tilesY = ((canvasHeight / 2) + mainView.scroll.y) / mainView.getTileHeight(),
         deltaWidth = 0, deltaHeight = 0;
 
       state['zooming'] === 1   ? 

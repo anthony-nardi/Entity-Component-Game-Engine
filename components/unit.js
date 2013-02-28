@@ -15,7 +15,14 @@ moduleLoader.imports('unit', ['inputs', 'events', 'vector'], function (inputs, e
     'handle': {},
     'inputs': function () {
       inputs.inputs(this);
-    }
+    },
+    'getWidth': function (zoom) {
+      return this.width;
+    },
+
+    'getHeight': function () {
+      return this.height;
+    },
 
   }.extend(events).extend(vector);
   

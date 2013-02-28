@@ -20,14 +20,6 @@ moduleLoader.imports('player', ['unit', 'mainView'], function (unit, mainView) {
       'y': 0
     },
 
-    'getWidth': function () {
-      return this.width * mainView.zoom;
-    },
-
-    'getHeight': function () {
-      return this.height * mainView.zoom;
-    },
-
     'handle': {
 
       'click': function (event) {
@@ -86,14 +78,16 @@ moduleLoader.imports('player', ['unit', 'mainView'], function (unit, mainView) {
     }
 
     newTile = mainView.getTile(this.position.x, this.position.y);
+    /*
     touchedTiles = mainView.getTouchedTiles(this);
     
     for (var tile in touchedTiles) {
       if (touchedTiles.hasOwnProperty(tile)) {
+        touchedTiles[tile].remove = true;
         mainView.outline.push(touchedTiles[tile]);
       }
     }
-    
+    */
     if ((newTile.x - oldTile.x) !== 0 || (newTile.y - oldTile.y) !== 0) {
       mainView.remove(this, oldTile).place(this, newTile);
     }
@@ -118,8 +112,8 @@ moduleLoader.imports('player', ['unit', 'mainView'], function (unit, mainView) {
       ctx.fillStyle = this.color;
       
       ctx.fillRect(
-        this.position.x * mainView.zoom - mainView.scroll.x - this.getWidth() / 2, 
-        this.position.y * mainView.zoom - mainView.scroll.y - this.getHeight() / 2, 
+        this.position.x * mainView.zoom - mainView.scroll.x - (this.getWidth() * mainView.zoom) / 2, 
+        this.position.y * mainView.zoom - mainView.scroll.y - (this.getHeight() * mainView.zoom) / 2, 
         this.width * mainView.zoom, 
         this.height * mainView.zoom
       );

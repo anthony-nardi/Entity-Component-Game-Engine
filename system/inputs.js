@@ -77,7 +77,7 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
   };
 
   var handleMouseDown = function (e) {
-
+    
     var c = canvas.getCanvas(e.target.id);
 
     if (this === c.element) {

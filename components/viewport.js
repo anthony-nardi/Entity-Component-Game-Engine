@@ -134,6 +134,36 @@ moduleLoader.imports('viewport', ['grid'], function (grid) {
       return count * this.getTileHeight() > this.height * this.getTileHeight() ? 
 
              this.height : count;
+    },
+
+    'place': function (object, coordinates) { //put object in tile
+
+      var x = coordinates ? coordinates.x
+                          : this.getTile(object.position.x, object.position.y).x,
+          y = coordinates ? coordinates.y
+                          : this.getTile(object.position.x, object.position.y).y;
+
+      if (this.tileMap[x] && this.tileMap[y]) {
+        this.tileMap[x][y].push(object);
+      }
+      
+      return this;
+
+    },
+    
+    'remove': function (object, coordinates) { //remove object in tile
+   
+      var x = coordinates ? coordinates.x
+                         : this.getTile(object.position.x, object.position.y).x,
+          y = coordinates ? coordinates.y
+                         : this.getTile(object.position.x, object.position.y).y;
+
+      if (this.tileMap[x] && this.tileMap[y]) {
+        this.tileMap[x][y].splice(this.tileMap[x][y].indexOf(object), 1);
+      }
+
+      return this;
+
     }
   
   });
