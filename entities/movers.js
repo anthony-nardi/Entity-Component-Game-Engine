@@ -2,6 +2,9 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
 
 	var move = function (event) {
 
+    var oldTile = mainView.getTile(this.position.x, this.position.y),
+        newTile = undefined;
+
     this.vector(this.position.x - this.moveTo.x, this.position.y - this.moveTo.y);
     this.normalize();
     this.scale(this.speed);
@@ -12,16 +15,7 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
       this.moveTo.x = Math.getRandomInt(1, 2000);
     	this.moveTo.y = Math.getRandomInt(1, 2000);
     	
-      this.height *= .9;
-    	this.width *= .9;
-
-      if (this.height < 1 || this.width < 1) {
-        this.state.grow = true;
-      }
-
-      if (this.height > 200 || this.width > 200) {
-        this.state.grow = false;
-      }
+      this.state.shrink = true;
 
       this.speed = Math.getRandomInt(1, 10);
       
@@ -44,7 +38,26 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
         this.position.y -= this.vy;
       }
     }
+
+    newTile = mainView.getTile(this.position.x, this.position.y);
+
+    if ((newTile.x - oldTile.x) !== 0 || (newTile.y - oldTile.y) !== 0) {
+      mainView.remove(this, oldTile).place(this, newTile);
+    }
   
+  };
+
+  var shrink = function () {
+    this.height *= .9;
+    this.width *= .9;
+    this.state.shrink = false;
+  }
+
+  var grow = function () {
+    this.height *= 1.1;
+    this.width *= 1.1;
+    console.log('grow')
+    this.state.grow = false;
   };
 
 	var movers = Object.create(unit).extend({
@@ -63,7 +76,8 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
     'state': {
     	'render': true,
     	'moving': true,
-      'grow'  : false
+      'grow'  : false,
+      'shrink': true
     }
 	});
 	
@@ -73,7 +87,7 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
 	
   	dm = Math.getRandomInt(25, 100);
 	
-  	Object.create(movers).extend({
+  	mainView.place(Object.create(movers).extend({
 	
   		'position': {
 				'x': Math.getRandomInt(1, 2000),
@@ -103,6 +117,18 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
 				mainView.state.render = true;
 	
   		}
+
+      if (this.state.grow) {
+
+        grow.call(this);
+        mainView.state.render = true;
+      
+      }
+
+      if (this.state.shrink) {
+        shrink.call(this);
+        mainView.state.render = true;
+      }
 	
   	}).on('render', function () {
 
@@ -120,7 +146,7 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
 	      );
     	}
 	
-  	});
+  	}));
 	
   }
 

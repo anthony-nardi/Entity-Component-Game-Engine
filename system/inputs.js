@@ -146,7 +146,7 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
   };
 
   var inputs = function (object) {
-    
+
     events.on.call(object, 'inputs', function (eventList) {
     
       for (event in eventList) {

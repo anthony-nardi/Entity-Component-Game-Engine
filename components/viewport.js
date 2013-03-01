@@ -58,6 +58,17 @@ moduleLoader.imports('viewport', ['grid'], function (grid) {
 
     },
 
+    'getTilePosFromPointer': function (point) {
+
+      var tilePos = this.getTile(
+        (point.x + this.scroll.x) / this.zoom,
+        (point.y + this.scroll.y) / this.zoom
+      );
+  
+      return tilePos;
+      
+    },
+
     'getTileContents': function (x, y) {
       if (this.tileMap[x] && this.tileMap[x][y]) {
         return this.tileMap[x][y];

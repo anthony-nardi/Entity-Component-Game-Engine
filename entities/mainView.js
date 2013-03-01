@@ -33,20 +33,6 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
       'height':100
     }
   
-  }).extend({
-  
-    'radius': 100,
-  
-    'drawCircleOnPoint': function (point) {
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, this.radius * this.zoom, 0, 2 * Math.PI, false);
-        ctx.lineWidth = 4 * this.zoom;
-        ctx.strokeStyle = '#49E20E';
-        ctx.stroke();
-    },
-
-    'alpha': 1
-
   });
 
   var canvasElement = mainView.getElement(),
@@ -81,6 +67,9 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
   };
 
   handle['click'] = function (event) {
+    var tilePos = this.getTilePosFromPointer(this.getCurrentPointerPosition());
+    console.log('Tile: ' + tilePos);
+    console.log(this.getTileContents(tilePos.x, tilePos.y));
   };
  
   var render = function () {
@@ -113,9 +102,6 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
           }
         }
       }
-      
-      this.drawCircleOnPoint(this.getCurrentPointerPosition());
-
     }
 
     render = false;

@@ -14,7 +14,8 @@ moduleLoader.imports('unit', ['inputs', 'events', 'vector'], function (inputs, e
     'state' : {},
     'handle': {},
     'inputs': function () {
-      inputs.inputs(this);
+      inputs.inputs.call(this, this);
+      return this;
     },
     'getWidth': function (zoom) {
       return this.width;
