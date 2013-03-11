@@ -1,6 +1,6 @@
 moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
 
-	var move = function (event) {
+  var move = function (event) {
 
     var oldTile = mainView.getTile(this.position.x, this.position.y),
         newTile = undefined;
@@ -13,8 +13,8 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
     && this.position.y === this.moveTo.y) {
       
       this.moveTo.x = Math.getRandomInt(1, mainView.width * mainView.tile.width - this.width * mainView.zoom);
-    	this.moveTo.y = Math.getRandomInt(1, mainView.height * mainView.tile.height - this.height * mainView.zoom);
-    	
+      this.moveTo.y = Math.getRandomInt(1, mainView.height * mainView.tile.height - this.height * mainView.zoom);
+      
       if (this.height > this.shrinkTo) this.state.shrink = true;
 
       this.speed = Math.getRandomInt(1, 10);
@@ -59,14 +59,14 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
     this.state.grow = false;
   };
 
-	var movers = Object.create(unit).extend({
-		'position': {
+  var movers = Object.create(unit).extend({
+    'position': {
       'x': 0,
       'y': 0
     },
     'moveTo': {
-    	'x': 0,
-    	'y': 0
+      'x': 0,
+      'y': 0
     },
     'growTo': 100,
     'shrinkTo': 5,
@@ -75,49 +75,49 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
     'color': '#000000',
     'speed': 0,
     'state': {
-    	'render': true,
-    	'moving': true,
+      'render': true,
+      'moving': true,
       'grow'  : false,
       'shrink': true
     }
-	});
-	
+  });  
+   
   var dm = 0;
-	
+  
   for (var i = 0; i < 2000; i += 1) {
-	
-  	dm = Math.getRandomInt(15, 50);
-	
-  	mainView.place(Object.create(movers).extend({
-	
-  		'position': {
-				'x': Math.getRandomInt(1, mainView.width * mainView.tile.width - dm * mainView.zoom),
-				'y': Math.getRandomInt(1, mainView.height * mainView.tile.height - dm * mainView.zoom)
-			},
-	
-  		'moveTo': {
-				'x': Math.getRandomInt(1, mainView.width * mainView.tile.width - dm * mainView.zoom),
-				'y': Math.getRandomInt(1, mainView.height * mainView.tile.height - dm * mainView.zoom)
-			},
-	
-  		'speed': Math.getRandomInt(1, 20),
-	
-  		'height': dm,
-	
-  		'width': dm,
+  
+    dm = Math.getRandomInt(15, 50);
+  
+    mainView.place(Object.create(movers).extend({
+  
+      'position': {
+        'x': Math.getRandomInt(1, mainView.width * mainView.tile.width - dm * mainView.zoom),
+        'y': Math.getRandomInt(1, mainView.height * mainView.tile.height - dm * mainView.zoom)
+      },
+  
+      'moveTo': {
+        'x': Math.getRandomInt(1, mainView.width * mainView.tile.width - dm * mainView.zoom),
+        'y': Math.getRandomInt(1, mainView.height * mainView.tile.height - dm * mainView.zoom)
+      },
+  
+      'speed': Math.getRandomInt(1, 20),
+  
+      'height': dm,
+  
+      'width': dm,
   
       'alpha': 1,
-	
-  		'color': '#'+Math.floor(Math.random()*16777215).toString(16),
-	
-  	}).on('update', function () {
-	
-  		if (this.state.moving) {
-	
-  			move.call(this);
-				mainView.state.render = true;
-	
-  		}
+  
+      'color': '#'+Math.floor(Math.random()*16777215).toString(16),
+  
+    }).on('update', function () {
+  
+      if (this.state.moving) {
+  
+        move.call(this);
+        mainView.state.render = true;
+  
+      }
 
       if (this.state.grow) {
 
@@ -130,27 +130,27 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
         shrink.call(this);
         mainView.state.render = true;
       }
-	
-  	}).on('render', function () {
+  
+    }).on('render', function () {
 
-			if (this.state.render || false) {
+      if (this.state.render || false) {
 
-	      var ctx = mainView.getContext();
-	      
-	      ctx.fillStyle = this.color;
-	      
-	      ctx.fillRect(
-	        this.position.x * mainView.zoom - mainView.scroll.x, 
-	        this.position.y * mainView.zoom - mainView.scroll.y, 
-	        this.width * mainView.zoom, 
-	        this.height * mainView.zoom
-	      );
-    	}
-	
-  	}));
-	
+        var ctx = mainView.getContext();
+        
+        ctx.fillStyle = this.color;
+        
+        ctx.fillRect(
+          this.position.x * mainView.zoom - mainView.scroll.x, 
+          this.position.y * mainView.zoom - mainView.scroll.y, 
+          this.width * mainView.zoom, 
+          this.height * mainView.zoom
+        );
+      }
+  
+    }));
+  
   }
 
-	return movers;
+  return movers;
 
 });
