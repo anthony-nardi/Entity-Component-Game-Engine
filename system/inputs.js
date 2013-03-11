@@ -16,34 +16,84 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
         'DOWN': 40,
         'LEFT':37,
         'RIGHT':39,
-        'PAUSE':80
+        'PAUSE':80,
+        'SPACE':32
       };
 
+  var handleKeyUp = function (e) {
+    
+    if (e.preventDefault) {
+  
+      e.preventDefault();
+  
+    }
+    
+    e.returnValue = false;
+    
+    list['keyup'] = [];
+
+    switch(e.keyCode) {
+    
+      case inputMap.UP:
+        list['keyup']['UP'] = true;
+        break;
+    
+      case inputMap.DOWN:
+        list['keyup']['DOWN'] = true;
+        break;
+    
+      case inputMap.LEFT:
+        list['keyup']['LEFT'] = true;
+        break;
+    
+      case inputMap.RIGHT:
+        list['keyup']['RIGHT'] = true;
+        break;
+
+      case inputMap.SPACE:
+        list['keyup']['SPACE'] = true;
+    
+      default:
+        break;
+    }
+  };
+
   var handleKeyDown = function (e) {
+
+    if (e.preventDefault) {
+  
+      e.preventDefault();
+  
+    }
+    
+    e.returnValue = false;
       
     list['keydown'] = [];
 
     switch(e.keyCode) {
     
-          case inputMap.UP:
-            list['keydown']['UP'] = true;
-            break;
-        
-          case inputMap.DOWN:
-            list['keydown']['DOWN'] = true;
-            break;
-        
-          case inputMap.LEFT:
-            list['keydown']['LEFT'] = true;
-            break;
-        
-          case inputMap.RIGHT:
-            list['keydown']['RIGHT'] = true;
-            break;
-        
-          default:
-            break;
-        }
+      case inputMap.UP:
+        list['keydown']['UP'] = true;
+        break;
+    
+      case inputMap.DOWN:
+        list['keydown']['DOWN'] = true;
+        break;
+    
+      case inputMap.LEFT:
+        list['keydown']['LEFT'] = true;
+        break;
+    
+      case inputMap.RIGHT:
+        list['keydown']['RIGHT'] = true;
+        break;
+
+      case inputMap.SPACE:
+        list['keydown']['SPACE'] = true;
+
+      default:
+        break;
+    }
   };
 
   var handleMouseClick = function (e) {
@@ -170,6 +220,7 @@ moduleLoader.imports('inputs', ['events', 'canvas'], function (events, canvas) {
   returnObject.inputs = function (object) { return inputs(object) };
   
   events.on('keydown', handleKeyDown);
+  events.on('keyup', handleKeyUp);
 
   events.on.call(window, 'mousewheel', handleScroll);
 

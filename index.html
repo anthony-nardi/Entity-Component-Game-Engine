@@ -7,6 +7,8 @@
     <link href="styles.css" rel="stylesheet" type="text/css"/>
     <script src="system/game.js"></script>
     <script>
+    var gravity = 10000
+    
     if (!Math.getRandomInt) {
       Math.getRandomInt = function (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -37,7 +39,12 @@
       };
     
     }
-    moduleLoader(['components','entities','system'])(['extend','vector','clock','events','canvas','movers', 'grid','inputs','viewport', 'fps','mainView','unit','player', 'circle','controller']);
+
+    moduleLoader(['components','entities','system'])(
+      ['extend','vector','ship','inputs', 'clock',
+       'events','canvas','player','movers', 'grid','viewport', 
+       'fps','mainView','unit', 'circle','controller']
+    );
 
     </script>
   </head>

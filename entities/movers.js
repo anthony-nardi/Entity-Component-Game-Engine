@@ -12,10 +12,10 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
     if (this.position.x === this.moveTo.x 
     && this.position.y === this.moveTo.y) {
       
-      this.moveTo.x = Math.getRandomInt(1, 2000);
-    	this.moveTo.y = Math.getRandomInt(1, 2000);
+      this.moveTo.x = Math.getRandomInt(1, mainView.width * mainView.tile.width - this.width * mainView.zoom);
+    	this.moveTo.y = Math.getRandomInt(1, mainView.height * mainView.tile.height - this.height * mainView.zoom);
     	
-      this.state.shrink = true;
+      if (this.height > this.shrinkTo) this.state.shrink = true;
 
       this.speed = Math.getRandomInt(1, 10);
       
@@ -56,7 +56,6 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
   var grow = function () {
     this.height *= 1.1;
     this.width *= 1.1;
-    console.log('grow')
     this.state.grow = false;
   };
 
@@ -69,6 +68,8 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
     	'x': 0,
     	'y': 0
     },
+    'growTo': 100,
+    'shrinkTo': 5,
     'height': 1000,
     'width': 1000,
     'color': '#000000',
@@ -85,25 +86,25 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
 	
   for (var i = 0; i < 2000; i += 1) {
 	
-  	dm = Math.getRandomInt(25, 100);
+  	dm = Math.getRandomInt(15, 50);
 	
   	mainView.place(Object.create(movers).extend({
 	
   		'position': {
-				'x': Math.getRandomInt(1, 2000),
-				'y': Math.getRandomInt(1, 2000)
+				'x': Math.getRandomInt(1, mainView.width * mainView.tile.width - dm * mainView.zoom),
+				'y': Math.getRandomInt(1, mainView.height * mainView.tile.height - dm * mainView.zoom)
 			},
 	
   		'moveTo': {
-				'x': Math.getRandomInt(1, 2000),
-				'y': Math.getRandomInt(1, 2000)
+				'x': Math.getRandomInt(1, mainView.width * mainView.tile.width - dm * mainView.zoom),
+				'y': Math.getRandomInt(1, mainView.height * mainView.tile.height - dm * mainView.zoom)
 			},
 	
-  		'speed': Math.getRandomInt(1, 10),
+  		'speed': Math.getRandomInt(1, 20),
 	
-  		'height': 100,
+  		'height': dm,
 	
-  		'width': 100,
+  		'width': dm,
   
       'alpha': 1,
 	

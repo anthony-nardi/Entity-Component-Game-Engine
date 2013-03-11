@@ -126,18 +126,18 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
         tilesY = ((canvasHeight / 2) + mainView.scroll.y) / mainView.getTileHeight(),
         deltaWidth = 0, deltaHeight = 0;
 
-      state['zooming'] === 1   ? 
-        mainView.zoom < 4 ? mainView.zoom += .1 : mainView.zoom = 4 : 
-        mainView.zoom <= .5 ? 
-          mainView.zoom = .5 : 
-          mainView.zoom -= .1;
+    state['zooming'] === 1   ? 
+      mainView.zoom < 4 ? mainView.zoom += .1 : mainView.zoom = 4 : 
+      mainView.zoom <= .5 ? 
+        mainView.zoom = .5 : 
+        mainView.zoom -= .1;
 
-      deltaWidth = mainView.getTileWidth() - lastTileWidth;
-      deltaHeight = mainView.getTileHeight() - lastTileHeight;
+    deltaWidth = mainView.getTileWidth() - lastTileWidth;
+    deltaHeight = mainView.getTileHeight() - lastTileHeight;
 
-      mainView.scroll.x += deltaWidth * tilesX;
-      mainView.scroll.y += deltaHeight * tilesY;
-      state.zooming = 0;
+    mainView.scroll.x += deltaWidth * tilesX;
+    mainView.scroll.y += deltaHeight * tilesY;
+    state.zooming = 0;
       
   };
 
@@ -149,4 +149,4 @@ moduleLoader.imports('mainView', ['viewport', 'events'], function (viewport, eve
 
   return mainView;
 
-}); 
+});

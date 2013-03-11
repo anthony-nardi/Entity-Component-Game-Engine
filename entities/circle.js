@@ -8,7 +8,11 @@ moduleLoader.imports('circle', ['unit', 'mainView'], function (unit, mainView) {
 		
 		'lineWidth': 4,
 
-		'radiusDelta': 0,
+		'mass': {
+			'from': 0,
+			'to'  : 200,
+			'now' : 100
+		},
 
 		'color': {
 		
@@ -65,6 +69,14 @@ moduleLoader.imports('circle', ['unit', 'mainView'], function (unit, mainView) {
 			}
 		
 		},
+
+		'changeMass': function (from, to, delta) {
+
+			if (from - to !== 0) {
+				from -= (from - to) * delta;
+			}
+
+		},
   
     'drawCircleOnPoint': function (point) {
      
@@ -77,6 +89,13 @@ moduleLoader.imports('circle', ['unit', 'mainView'], function (unit, mainView) {
     },
 
     'handle': {
+    	
+    	'mousemove': function () {
+    		this.vector((mainView.getCurrentPointerPosition().x 
+                  + mainView.scroll.x)  / mainView.zoom, 
+    								(mainView.getCurrentPointerPosition().y 
+                  + mainView.scroll.y)  / mainView.zoom);
+    	},
     	
     	'mousedown': function () {
     		this.state.fill = true;
@@ -100,6 +119,7 @@ moduleLoader.imports('circle', ['unit', 'mainView'], function (unit, mainView) {
     		this.lineWidth += step;
     		var delta = step / Math.abs(this.radius - 100/Math.PI)
     		this.changeColor(this.color.now, this.color.to, delta);
+    		this.changeMass(this.mass.now, this.mass.to, delta);
     	
     	} else {
     	
@@ -120,6 +140,7 @@ moduleLoader.imports('circle', ['unit', 'mainView'], function (unit, mainView) {
     		this.lineWidth -= step;
     		var delta = step / (100 - this.radius)
 				this.changeColor(this.color.now, this.color.from, delta);
+				this.changeMass(this.mass.now, this.mass.from, delta);
 
     	} else {
     	

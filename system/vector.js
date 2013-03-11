@@ -19,6 +19,16 @@ moduleLoader.imports('vector', [], function () {
       return this;
     
     },
+
+    'scaleX': function (magnitude) {
+      this.vx *= magnitude;
+      return this;
+    },
+
+    'scaleY': function (magnitude) {
+      this.vy *= magnitude;
+      return this;
+    },
   
     'add': function (vector) {
     
@@ -81,12 +91,16 @@ moduleLoader.imports('vector', [], function () {
       this.vx = vx * cosVal - vy * sinVal;
       this.vy = vx * sinVal + vy * cosVal;
     
-      return this
+      return this;
 
     },
   
     'toString': function () {
       return '(' + this.vx.toFixed(3) + ', ' + this.vy.toFixed(3) + ')';
+    },
+
+    'toRadians': function () {
+      return Math.atan2(this.vy, this.vx);
     }
   
   };
