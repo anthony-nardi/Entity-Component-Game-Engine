@@ -1,16 +1,16 @@
-moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
+moduleLoader.imports('movers', ['unit', 'mainView','collision'], function (unit, mainView, collision) {
 
   var move = function (event) {
 
-    var oldTile = mainView.getTile(this.position.x, this.position.y),
+    var oldTile = mainView.getTile(this.x, this.y),
         newTile = undefined;
 
-    this.vector(this.position.x - this.moveTo.x, this.position.y - this.moveTo.y);
+    this.vector(this.x - this.moveTo.x, this.y - this.moveTo.y);
     this.normalize();
     this.scale(this.speed);
 
-    if (this.position.x === this.moveTo.x 
-    && this.position.y === this.moveTo.y) {
+    if (this.x === this.moveTo.x 
+    && this.y === this.moveTo.y) {
       
       this.moveTo.x = Math.getRandomInt(1, mainView.width * mainView.tile.width - this.width * mainView.zoom);
       this.moveTo.y = Math.getRandomInt(1, mainView.height * mainView.tile.height - this.height * mainView.zoom);
@@ -23,23 +23,23 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
     
     }
     
-    if (this.position.x !== this.moveTo.x) {
-      if (Math.abs(Math.round(this.position.x - this.moveTo.x)) < this.speed) {
-        this.position.x = this.moveTo.x;
+    if (this.x !== this.moveTo.x) {
+      if (Math.abs(Math.round(this.x - this.moveTo.x)) < this.speed) {
+        this.x = this.moveTo.x;
       } else {
-        this.position.x -= this.vx;
+        this.x -= this.vx;
       }
     }
     
-    if (this.position.y !== this.moveTo.y) {
-      if (Math.abs(Math.round(this.position.y - this.moveTo.y)) < this.speed) {
-        this.position.y = this.moveTo.y;
+    if (this.y !== this.moveTo.y) {
+      if (Math.abs(Math.round(this.y - this.moveTo.y)) < this.speed) {
+        this.y = this.moveTo.y;
       } else {
-        this.position.y -= this.vy;
+        this.y -= this.vy;
       }
     }
 
-    newTile = mainView.getTile(this.position.x, this.position.y);
+    newTile = mainView.getTile(this.x, this.y);
 
     if ((newTile.x - oldTile.x) !== 0 || (newTile.y - oldTile.y) !== 0) {
       mainView.remove(this, oldTile).place(this, newTile);
@@ -60,16 +60,16 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
   };
 
   var movers = Object.create(unit).extend({
-    'position': {
-      'x': 0,
-      'y': 0
-    },
+    
+    'x': 0,
+    'y': 0,
+
     'moveTo': {
       'x': 0,
       'y': 0
     },
     'growTo': 100,
-    'shrinkTo': 5,
+    'shrinkTo': 4,
     'height': 1000,
     'width': 1000,
     'color': '#000000',
@@ -84,16 +84,14 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
    
   var dm = 0;
   
-  for (var i = 0; i < 2000; i += 1) {
+  for (var i = 0; i < 200; i += 1) {
   
     dm = Math.getRandomInt(15, 50);
-  
-    mainView.place(Object.create(movers).extend({
-  
-      'position': {
-        'x': Math.getRandomInt(1, mainView.width * mainView.tile.width - dm * mainView.zoom),
-        'y': Math.getRandomInt(1, mainView.height * mainView.tile.height - dm * mainView.zoom)
-      },
+
+    var mover = Object.create(movers).extend({
+
+      'x': Math.getRandomInt(1, mainView.width * mainView.tile.width - dm * mainView.zoom),
+      'y': Math.getRandomInt(1, mainView.height * mainView.tile.height - dm * mainView.zoom),
   
       'moveTo': {
         'x': Math.getRandomInt(1, mainView.width * mainView.tile.width - dm * mainView.zoom),
@@ -140,14 +138,20 @@ moduleLoader.imports('movers', ['unit', 'mainView'], function (unit, mainView) {
         ctx.fillStyle = this.color;
         
         ctx.fillRect(
-          this.position.x * mainView.zoom - mainView.scroll.x, 
-          this.position.y * mainView.zoom - mainView.scroll.y, 
+          this.x * mainView.zoom - mainView.scroll.x, 
+          this.y * mainView.zoom - mainView.scroll.y, 
           this.width * mainView.zoom, 
           this.height * mainView.zoom
         );
       }
   
-    }));
+    });
+    
+    collision.collides.call(mover, function () {
+      //console.log('Mover hit!')
+    });
+
+    mainView.place(mover);
   
   }
 

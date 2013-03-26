@@ -25,6 +25,7 @@ moduleLoader.imports('clock', ['inputs', 'events', 'fps'], function (inputs, eve
 
     while (dtBuffer >= SIM_RES) {
       events.fire('update');
+      events.fire('checkCollisions');
       dtBuffer -= SIM_RES;
     }
     

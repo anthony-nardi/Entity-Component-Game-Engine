@@ -1,4 +1,4 @@
-moduleLoader.imports('ship', ['unit','mainView', 'vector'], function (unit, mainView, vector) {
+moduleLoader.imports('ship', ['unit','mainView', 'vector', 'collision'], function (unit, mainView, vector, collision) {
 
   var ship = Object.create(unit).inputs().extend({
     
@@ -29,7 +29,7 @@ moduleLoader.imports('ship', ['unit','mainView', 'vector'], function (unit, main
     },
 
     'bullets': [],
-    'maxBullets': 10,
+    'maxBullets': 20,
     'range': 2000,
     'dmg': 3,
 
@@ -69,14 +69,27 @@ moduleLoader.imports('ship', ['unit','mainView', 'vector'], function (unit, main
 
         'ctx': ctx,
 
+        'collisionCallback': function (otherObject) {
+          
+          // console.log('Bullet hit object!');
+          otherObject.height += 1;
+          otherObject.width += 1;
+          this.off('update', this.update).off('render', this.render);
+          bullets.splice(bullets.indexOf(this), 1);
+          collision.notcollides.call(this, this.collisionCallback);
+
+        },
+
         'render': function () {
+          
           this.ctx.fillStyle = this.color;
+          
           this.ctx.fillRect(
             this.x * mainView.zoom - mainView.scroll.x,
             this.y * mainView.zoom - mainView.scroll.y,
             this.width * mainView.zoom,
             this.height * mainView.zoom
-          )
+          );
 
         },
 
@@ -90,12 +103,13 @@ moduleLoader.imports('ship', ['unit','mainView', 'vector'], function (unit, main
           if (this.distanceTraveled > range) {
             this.off('update', this.update).off('render', this.render);
             bullets.splice(bullets.indexOf(this), 1);
+            collision.notcollides.call(this, this.collisionCallback);
           }
 
         }
       
       });
-
+      collision.collides.call(bullet, bullet.collisionCallback);
       bullet.on('update', bullet.update).on('render', bullet.render);
 
       this.bullets.push(bullet);
