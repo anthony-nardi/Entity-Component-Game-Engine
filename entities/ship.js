@@ -29,7 +29,7 @@ moduleLoader.imports('ship', ['unit','mainView', 'vector', 'collision'], functio
     },
 
     'bullets': [],
-    'maxBullets': 20,
+    'maxBullets': 30,
     'range': 2000,
     'dmg': 3,
 
@@ -74,9 +74,10 @@ moduleLoader.imports('ship', ['unit','mainView', 'vector', 'collision'], functio
           // console.log('Bullet hit object!');
           otherObject.height += 1;
           otherObject.width += 1;
+          collision.notcollides.call(this, this.collisionCallback);
           this.off('update', this.update).off('render', this.render);
           bullets.splice(bullets.indexOf(this), 1);
-          collision.notcollides.call(this, this.collisionCallback);
+          
 
         },
 
@@ -101,9 +102,11 @@ moduleLoader.imports('ship', ['unit','mainView', 'vector', 'collision'], functio
           this.distanceTraveled += this.vector.length();
 
           if (this.distanceTraveled > range) {
+            
+            collision.notcollides.call(this, this.collisionCallback);
             this.off('update', this.update).off('render', this.render);
             bullets.splice(bullets.indexOf(this), 1);
-            collision.notcollides.call(this, this.collisionCallback);
+            
           }
 
         }

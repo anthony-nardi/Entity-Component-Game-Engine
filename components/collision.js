@@ -15,7 +15,7 @@ moduleLoader.imports('collision', ['events'], function (events) {
         s2top = shape2.y,
         s2bottom = shape2.y + shape2.height;
 
-    if (s1left > s2left && s1top > s2top && s1right < s2right && s1bottom < s2bottom) {
+    if (s1left > s2left && s1top > s2top && s1right < s2right && s1bottom < s2bottom) { 
       //shape1 inside shape2
       return true;
     }
@@ -52,8 +52,13 @@ moduleLoader.imports('collision', ['events'], function (events) {
       for (var j=1; j<collisionObjects.length; j+=1) {
         
         if (isOverlap(collisionObjects[i], collisionObjects[j])) {
-          collisionCallbacks[i].call(collisionObjects[i], collisionObjects[j]);
-          collisionCallbacks[j].call(collisionObjects[j], collisionObjects[i]);
+          try {
+            collisionCallbacks[i].call(collisionObjects[i], collisionObjects[j]);
+            collisionCallbacks[j].call(collisionObjects[j], collisionObjects[i]);
+          } catch (e) {
+            console.log(e);
+          }
+          
         }
       
       }
