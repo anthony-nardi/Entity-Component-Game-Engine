@@ -1,6 +1,3 @@
-/*======================================================================================
---------------------------------------------CLOCK--------------------------------------
-======================================================================================*/
 moduleLoader.imports('clock', ['inputs', 'events', 'fps'], function (inputs, events, fps) {
    
   var returnObject = {},
@@ -8,11 +5,9 @@ moduleLoader.imports('clock', ['inputs', 'events', 'fps'], function (inputs, eve
   getNow = Date.now,
   now = 0, last = 0,
   delta = 0,
-  dtBuffer = 0,
-  
+  dtBuffer = 0,  
   looping = false,
   SIM_RES = 10,
-
   renderOpsPerSec = Object.create(fps);
 
   var loop = function () {
@@ -33,6 +28,7 @@ moduleLoader.imports('clock', ['inputs', 'events', 'fps'], function (inputs, eve
     events.fire('render');
     renderOpsPerSec.end();
     inputs.clear();
+    
     last = now;
 
     if (looping) setTimeout(loop, 1);

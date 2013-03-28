@@ -11,10 +11,17 @@ moduleLoader.imports("controller",
 function() {
   
   var modules = moduleLoader.list, 
-      modulesLength = moduleLoader.list.length, 
+      modulesLength = modules.length,
+      allModulesLength = moduleLoader.allModules.length,  
+      clock = modules.clock,
+      success = (modulesLength - 1) === allModulesLength;
+
+  modules.sort();
+  moduleLoader.allModules.sort();
+
+  console.log("Successful module import: " + success);
+  console.log("Module list: " + modules);
   
-  clock = modules.clock;
-  
-  clock.start();
+  if (success) clock.start();
 
 });

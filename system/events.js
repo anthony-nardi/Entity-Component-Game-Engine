@@ -1,62 +1,54 @@
 moduleLoader.imports("events", [], function () {
 
   var list = [],
-  
-  on = function (type, callback) {
-      
-    if (list[type]) {
 
-      list[type].push([this, callback]);
-    
-    } else {
-    
-      if (this instanceof Node) {
-        this.addEventListener(type, fire);
-      } else {
-        window.addEventListener(type, fire);
-      }
-
-      list[type] = [];
-      list[type].push([this, callback]);
-    
-    }
+  on = function (name, callback) {
   
+    if (!list[name]) {
+    
+      this instanceof Node ? this.addEventListener(name, fire) : window.addEventListener(name, fire);
+
+      list.push(name);
+      list[name] = [];
+      list[name].push([this, callback]);
+    
+    } else { list[name].push([this, callback]); }
+
     return this;
-  
+
   },
 
-  off = function (type, callback, opt) {
-  
-    var event = list[type];
+  off = function (name, callback, opt) {
 
-    if (opt) window.removeEventListener(name, fire);
-    
+    var event = list[name];
+
+    if (opt) { 
+      this instanceof Node ? this.removeEventListener(name, fire) 
+      : window.removeEventListener(name, fire); 
+    }
+
     if (event.length) {
-      
+
       for (var i = 0; i < event.length; i += 1) {
         if (event[i][0] === this && event[i][1] === callback) {
-          event.splice(i, 1);   
+          event.splice(i, 1);
           i -= 1;
-        }
+        } 
       }
     
     }
-  
+
     return this;
-  
+
   },
 
+  
   fire = function (event) {
       
-    var type = typeof event === "string" ?
-          event : event.type,
-        
-        data = typeof event === "string" ?
-          arguments[1] : event;
-        
+    var type      = typeof event === "string" ? event : event.type,        
+        data      = typeof event === "string" ? arguments[1] : event,        
         listeners = list[type],
-
-        listener = undefined;
+        listener  = undefined;
 
     if (listeners.length) {
       for (var i = 0; i < listeners.length; i += 1) {
